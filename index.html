@@ -15,15 +15,17 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { height: 100%; }
     body {
       font-family: 'Inter', -apple-system, sans-serif;
       background: #0a0e1a;
       color: #fff;
-      height: 100vh;
+      height: 100%;
+      height: 100dvh;
       overflow: hidden;
     }
 
-    .app { height: 100vh; display: flex; flex-direction: column; }
+    .app { height: 100%; height: 100dvh; display: flex; flex-direction: column; }
 
     /* Header */
     .header {
@@ -110,14 +112,14 @@
        MAIN CONTENT: SIDE-BY-SIDE LAYOUT
        ============================================= */
     .main-content {
-      flex: 1; display: flex; overflow: hidden;
+      flex: 1; display: flex; overflow: hidden; min-height: 0;
     }
 
     /* LEFT: Leaderboard */
     .left-panel {
       flex: 1; display: flex; flex-direction: column;
       border-right: 1px solid rgba(255,255,255,0.06);
-      min-width: 0;
+      min-width: 0; min-height: 0;
     }
 
     .course-bar {
@@ -136,7 +138,7 @@
     .error-msg { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: #e11d48; font-size: 14px; padding: 20px; text-align: center; }
     .error-msg .retry-btn { background: #1e2a3a; border: 1px solid #2a3a4a; color: #8892b0; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px; }
 
-    .leaderboard { flex: 1; overflow-y: auto; }
+    .leaderboard { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; min-height: 0; }
     .leaderboard::-webkit-scrollbar { width: 4px; }
     .leaderboard::-webkit-scrollbar-thumb { background: #1e2a3a; border-radius: 2px; }
 
@@ -369,7 +371,7 @@
     .book-tab:hover { color: #64748b; }
     .book-tab.active { color: #fbbf24; background: rgba(251,191,36,0.04); }
 
-    .betting-content { flex: 1; overflow-y: auto; }
+    .betting-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; min-height: 0; }
     .betting-content::-webkit-scrollbar { width: 4px; }
     .betting-content::-webkit-scrollbar-thumb { background: #1e2a3a; border-radius: 2px; }
 
@@ -539,8 +541,9 @@
       .right-panel {
         width: 100%; flex: 1;
         display: none;
+        min-height: 0;
       }
-      .right-panel.visible { display: flex; }
+      .right-panel.visible { display: flex; flex: 1; }
 
       /* Tighter spacing on mobile */
       .header-top { padding: 10px 12px 0; }
