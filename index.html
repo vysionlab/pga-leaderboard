@@ -566,8 +566,8 @@
           <div class="view-odds active" id="viewOdds">
             <div class="odds-section">
               <div class="odds-title-row">
-                <div class="odds-section-title">Houston Open</div>
-                <div class="odds-disclaimer">Odds for illustration only</div>
+                <div class="odds-section-title">Valero Texas Open</div>
+                <div class="odds-disclaimer">Pre-tournament odds \u00b7 Verify on sportsbook</div>
               </div>
               <div class="odds-header">
                 <div>#</div>
@@ -964,40 +964,45 @@
     // ==========================================
     const oddsData = {
       fanduel: [
-        { player: 'Min Woo Lee', odds: '+1300' },
-        { player: 'Chris Gotterup', odds: '+1600' },
-        { player: 'Jake Knapp', odds: '+2000' },
-        { player: 'Brooks Koepka', odds: '+2200' },
-        { player: 'Sam Burns', odds: '+2200' },
-        { player: 'Nicolai H\u00f8jgaard', odds: '+2500' },
-        { player: 'Rickie Fowler', odds: '+3000' },
-        { player: 'Kurt Kitayama', odds: '+3000' },
-        { player: 'Marco Penge', odds: '+3300' },
-        { player: 'Michael Thorbjornsen', odds: '+3000' },
-        { player: 'Ben Griffin', odds: '+3500' },
-        { player: 'Adam Scott', odds: '+3500' },
-        { player: 'Harris English', odds: '+3500' },
-        { player: 'Shane Lowry', odds: '+4500' },
-        { player: 'Tony Finau', odds: '+5500' },
+        { player: 'Tommy Fleetwood', odds: '+1500' },
+        { player: 'Ludvig \u00c5berg', odds: '+1500' },
+        { player: 'Jordan Spieth', odds: '+1600' },
+        { player: 'Russell Henley', odds: '+1600' },
+        { player: 'Robert MacIntyre', odds: '+2000' },
+        { player: 'Si Woo Kim', odds: '+2200' },
+        { player: 'Sepp Straka', odds: '+2200' },
+        { player: 'Hideki Matsuyama', odds: '+2200' },
+        { player: 'Nicolai H\u00f8jgaard', odds: '+2250' },
+        { player: 'Maverick McNealy', odds: '+2400' },
+        { player: 'Michael Thorbjornsen', odds: '+2500' },
+        { player: 'Rickie Fowler', odds: '+2700' },
+        { player: 'Keith Mitchell', odds: '+3000' },
+        { player: 'Denny McCarthy', odds: '+3300' },
+        { player: 'J.J. Spaun', odds: '+3100' },
+        { player: 'Alex Noren', odds: '+3800' },
+        { player: 'Gary Woodland', odds: '+5100' },
+        { player: 'Marco Penge', odds: '+5200' },
       ],
       draftkings: [
-        { player: 'Min Woo Lee', odds: '+1400' },
-        { player: 'Chris Gotterup', odds: '+1800' },
-        { player: 'Jake Knapp', odds: '+2000' },
-        { player: 'Brooks Koepka', odds: '+2000' },
-        { player: 'Sam Burns', odds: '+2500' },
-        { player: 'Nicolai H\u00f8jgaard', odds: '+2500' },
-        { player: 'Rickie Fowler', odds: '+3000' },
-        { player: 'Kurt Kitayama', odds: '+3000' },
-        { player: 'Marco Penge', odds: '+3000' },
-        { player: 'Michael Thorbjornsen', odds: '+3000' },
-        { player: 'Ben Griffin', odds: '+3500' },
-        { player: 'Adam Scott', odds: '+3500' },
-        { player: 'Harris English', odds: '+3500' },
-        { player: 'Harry Hall', odds: '+4000' },
-        { player: 'Shane Lowry', odds: '+4000' },
-        { player: 'Tony Finau', odds: '+6000' },
-        { player: 'Will Zalatoris', odds: '+7000' },
+        { player: 'Tommy Fleetwood', odds: '+1450' },
+        { player: 'Ludvig \u00c5berg', odds: '+1600' },
+        { player: 'Russell Henley', odds: '+1600' },
+        { player: 'Robert MacIntyre', odds: '+1650' },
+        { player: 'Si Woo Kim', odds: '+1750' },
+        { player: 'Jordan Spieth', odds: '+1900' },
+        { player: 'Nicolai H\u00f8jgaard', odds: '+2250' },
+        { player: 'Hideki Matsuyama', odds: '+2300' },
+        { player: 'Maverick McNealy', odds: '+2400' },
+        { player: 'Michael Thorbjornsen', odds: '+2500' },
+        { player: 'Rickie Fowler', odds: '+2700' },
+        { player: 'Sepp Straka', odds: '+3300' },
+        { player: 'J.J. Spaun', odds: '+3100' },
+        { player: 'Keith Mitchell', odds: '+3700' },
+        { player: 'Alex Noren', odds: '+3800' },
+        { player: 'Ryo Hisatsune', odds: '+5000' },
+        { player: 'Gary Woodland', odds: '+5100' },
+        { player: 'Nick Taylor', odds: '+5200' },
+        { player: 'Marco Penge', odds: '+5200' },
       ]
     };
 
@@ -1007,88 +1012,88 @@
     const parlayData = {
       fanduel: [
         {
-          label: 'Top 10 Value Parlay', badge: 'Value', badgeClass: '',
+          label: 'Favorites Top 10', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+210' },
-            { player: 'Min Woo Lee', prop: 'Top 10', odds: '-120' },
-            { player: 'Nicolai H\u00f8jgaard', prop: 'Top 10', odds: '+240' },
+            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+135' },
+            { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
+            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+250' },
           ],
-          payout: '$187', book: 'FanDuel'
+          payout: '$265', book: 'FanDuel'
         },
         {
-          label: 'Top 20 Safe Parlay', badge: 'Safe', badgeClass: 'safe',
+          label: 'Top 20 Safe Play', badge: 'Safe', badgeClass: 'safe',
           hot: false,
           legs: [
-            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+114' },
-            { player: 'Sam Burns', prop: 'Top 20', odds: '-135' },
-            { player: 'Jake Knapp', prop: 'Top 20', odds: '-110' },
-            { player: 'Wyndham Clark', prop: 'Top 20', odds: '+170' },
+            { player: 'Russell Henley', prop: 'Top 20', odds: '-130' },
+            { player: 'Ludvig \u00c5berg', prop: 'Top 20', odds: '-140' },
+            { player: 'Sepp Straka', prop: 'Top 20', odds: '+110' },
+            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+120' },
           ],
-          payout: '$142', book: 'FanDuel'
+          payout: '$98', book: 'FanDuel'
         },
         {
-          label: 'Top 10 Longshot', badge: 'Longshot', badgeClass: 'longshot',
+          label: 'Longshot Top 10', badge: 'Longshot', badgeClass: 'longshot',
           hot: false,
           legs: [
-            { player: 'Marco Penge', prop: 'Top 10', odds: '+350' },
-            { player: 'Shane Lowry', prop: 'Top 10', odds: '+280' },
-            { player: 'Tony Finau', prop: 'Top 10', odds: '+320' },
+            { player: 'Denny McCarthy', prop: 'Top 10', odds: '+400' },
+            { player: 'Keith Mitchell', prop: 'Top 10', odds: '+350' },
+            { player: 'Gary Woodland', prop: 'Top 10', odds: '+600' },
           ],
-          payout: '$890', book: 'FanDuel'
+          payout: '$2,450', book: 'FanDuel'
         },
         {
-          label: 'Mixed Props Parlay', badge: 'Value', badgeClass: '',
+          label: 'Spieth Hometown Hero', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'M. Thorbjornsen', prop: 'Top 5', odds: '+500' },
-            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+210' },
-            { player: 'Adam Scott', prop: 'Top 20', odds: '+110' },
+            { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
+            { player: 'Hideki Matsuyama', prop: 'Top 10', odds: '+220' },
+            { player: 'Maverick McNealy', prop: 'Top 20', odds: '+100' },
           ],
-          payout: '$425', book: 'FanDuel'
+          payout: '$345', book: 'FanDuel'
         },
       ],
       draftkings: [
         {
-          label: 'Top 10 Value Parlay', badge: 'Value', badgeClass: '',
+          label: 'Favorites Top 10', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+200' },
-            { player: 'Min Woo Lee', prop: 'Top 10', odds: '-115' },
-            { player: 'Chris Gotterup', prop: 'Top 10', odds: '+175' },
+            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+130' },
+            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+160' },
+            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+250' },
           ],
-          payout: '$155', book: 'DraftKings'
+          payout: '$225', book: 'DraftKings'
         },
         {
-          label: 'Top 20 Safe Parlay', badge: 'Safe', badgeClass: 'safe',
+          label: 'Top 20 Safe Play', badge: 'Safe', badgeClass: 'safe',
           hot: false,
           legs: [
-            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+120' },
-            { player: 'Sam Burns', prop: 'Top 20', odds: '-130' },
-            { player: 'Harris English', prop: 'Top 20', odds: '+105' },
-            { player: 'Kurt Kitayama', prop: 'Top 20', odds: '-105' },
+            { player: 'Jordan Spieth', prop: 'Top 20', odds: '-110' },
+            { player: 'Russell Henley', prop: 'Top 20', odds: '-125' },
+            { player: 'Nicolai H\u00f8jgaard', prop: 'Top 20', odds: '+105' },
+            { player: 'Sepp Straka', prop: 'Top 20', odds: '+115' },
           ],
-          payout: '$128', book: 'DraftKings'
+          payout: '$92', book: 'DraftKings'
         },
         {
-          label: 'Top 10 Longshot', badge: 'Longshot', badgeClass: 'longshot',
+          label: 'Longshot Top 10', badge: 'Longshot', badgeClass: 'longshot',
           hot: false,
           legs: [
-            { player: 'Shane Lowry', prop: 'Top 10', odds: '+300' },
-            { player: 'Tony Finau', prop: 'Top 10', odds: '+340' },
-            { player: 'Will Zalatoris', prop: 'Top 10', odds: '+380' },
+            { player: 'Denny McCarthy', prop: 'Top 10', odds: '+420' },
+            { player: 'Ryo Hisatsune', prop: 'Top 10', odds: '+550' },
+            { player: 'Nick Taylor', prop: 'Top 10', odds: '+500' },
           ],
-          payout: '$1,770', book: 'DraftKings'
+          payout: '$4,200', book: 'DraftKings'
         },
         {
-          label: 'Mixed Props Parlay', badge: 'Value', badgeClass: '',
+          label: 'Mixed Props', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'Koepka', prop: 'Top 5', odds: '+510' },
-            { player: 'Nicolai H\u00f8jgaard', prop: 'Top 10', odds: '+225' },
-            { player: 'Ben Griffin', prop: 'Top 20', odds: '+130' },
+            { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
+            { player: 'Si Woo Kim', prop: 'Top 10', odds: '+200' },
+            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+110' },
           ],
-          payout: '$580', book: 'DraftKings'
+          payout: '$380', book: 'DraftKings'
         },
       ]
     };
