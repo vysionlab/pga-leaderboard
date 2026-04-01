@@ -1,0 +1,22 @@
+{
+  "name": "PGA Tour Live Leaderboard",
+  "short_name": "PGA Live",
+  "description": "Live PGA Tour leaderboard with betting odds and parlays",
+  "start_url": "/pga-leaderboard/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0d1220",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
