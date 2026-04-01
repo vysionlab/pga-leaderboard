@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PGA Tour Live Leaderboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0e1a;
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app { height: 100vh; display: flex; flex-direction: column; }
+
+    /* Header */
+    .header {
+      background: #0d1220;
+      padding: 0;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      -webkit-app-region: drag;
+    }
+
+    .header-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px 0 20px;
+    }
+
+    .header-brand {
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    .pga-logo {
+      width: 36px; height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .header-titles { display: flex; flex-direction: column; gap: 2px; }
+    .tournament-name {
+      font-size: 15px; color: #fff; font-weight: 700;
+      max-width: 380px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      letter-spacing: -0.3px;
+    }
+    .tournament-subtitle {
+      font-size: 11px; color: #4a5a6a; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tournament-subtitle .dot { color: #2a3a4a; }
+
+    .header-right { display: flex; align-items: center; gap: 12px; z-index: 1; }
+
+    .status-group {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 3px;
+    }
+
+    .live-badge {
+      padding: 3px 10px; border-radius: 4px;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    }
+    .live-badge.live {
+      background: #e11d48; color: #fff;
+      animation: livePulse 2s ease-in-out infinite;
+    }
+    .live-badge.final {
+      background: transparent; color: #64748b;
+      border: 1px solid #2a3a4a;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(225,29,72,0.4); }
+      50% { opacity: 0.85; box-shadow: 0 0 16px rgba(225,29,72,0.7); }
+    }
+    .round-info { font-size: 11px; color: #64748b; font-weight: 500; }
+
+    /* Progress bar under header */
+    .header-progress {
+      height: 3px;
+      background: #141a2a;
+      margin-top: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-progress .bar {
+      height: 100%;
+      background: linear-gradient(90deg, #003e92, #00a80a, #fbbf24);
+      border-radius: 0 2px 2px 0;
+      transition: width 1s ease;
+    }
+    .header-progress .shimmer {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+    /* =============================================
+       MAIN CONTENT: SIDE-BY-SIDE LAYOUT
+       ============================================= */
+    .main-content {
+      flex: 1; display: flex; overflow: hidden;
+    }
+
+    /* LEFT: Leaderboard */
+    .left-panel {
+      flex: 1; display: flex; flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      min-width: 0;
+    }
+
+    .course-bar {
+      background: #0a0e1a; padding: 7px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 11px; color: #3a4a5a;
+    }
+    .refresh-info { font-size: 10px; color: #3a5a3e; }
+
+    .loading { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+    .loading-spinner { width: 40px; height: 40px; border: 3px solid #1e2a3a; border-top-color: #00a80a; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { color: #5a6a7a; font-size: 13px; }
+
+    .error-msg { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: #e11d48; font-size: 14px; padding: 20px; text-align: center; }
+    .error-msg .retry-btn { background: #1e2a3a; border: 1px solid #2a3a4a; color: #8892b0; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+
+    .leaderboard { flex: 1; overflow-y: auto; }
+    .leaderboard::-webkit-scrollbar { width: 4px; }
+    .leaderboard::-webkit-scrollbar-thumb { background: #1e2a3a; border-radius: 2px; }
+
+    .col-headers {
+      display: grid; grid-template-columns: 42px 1fr 66px 66px 44px 72px;
+      padding: 10px 16px; font-size: 10px; font-weight: 700; color: #4a5a6a;
+      text-transform: uppercase; letter-spacing: 1px;
+      background: #0d1220; position: sticky; top: 0; z-index: 5;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .col-headers .right { text-align: right; }
+
+    .player-row {
+      display: grid; grid-template-columns: 42px 1fr 66px 66px 44px 72px;
+      padding: 7px 16px; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: all 0.4s; position: relative; overflow: hidden;
+    }
+    .player-row:hover { background: rgba(255,255,255,0.03); }
+    .player-row:first-child { background: linear-gradient(90deg, rgba(251,191,36,0.04), transparent); }
+
+    .player-row.moved-up::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(0,168,10,0.12), transparent);
+      animation: flashSlide 1.2s ease-out forwards;
+    }
+    .player-row.moved-down::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(225,29,72,0.1), transparent);
+      animation: flashSlide 1.2s ease-out forwards;
+    }
+    @keyframes flashSlide {
+      0% { opacity: 1; transform: translateX(-100%); }
+      40% { opacity: 1; transform: translateX(0); }
+      100% { opacity: 0; transform: translateX(100%); }
+    }
+
+    .pos { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #94a3b8; }
+    .pos.leader { color: #fbbf24; }
+
+    .player-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .player-flag { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; flex-shrink: 0; }
+    .player-flag-emoji { font-size: 16px; flex-shrink: 0; }
+    .player-name { font-size: 13px; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .player-name .first { color: #8892b0; font-weight: 400; }
+
+    .thru { font-size: 12px; text-align: center; color: #64748b; }
+    .thru.finished { color: #4a5a6a; font-weight: 600; }
+
+    .recent-holes { display: flex; gap: 3px; justify-content: flex-end; }
+    .hole-dot {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+    }
+    .hole-dot.birdie { background: rgba(0,168,10,0.2); color: #4ade80; border: 1px solid #00a80a; }
+    .hole-dot.eagle { background: rgba(234,179,8,0.2); color: #fbbf24; border: 1px solid #eab308; }
+    .hole-dot.bogey { background: rgba(225,29,72,0.15); color: #fb7185; border: 1px solid rgba(225,29,72,0.4); }
+    .hole-dot.double { background: rgba(225,29,72,0.25); color: #e11d48; border: 1px solid rgba(225,29,72,0.6); }
+    .hole-dot.par { background: rgba(148,163,184,0.08); color: #4a5568; border: 1px solid rgba(148,163,184,0.15); }
+
+    /* =============================================
+       SPLIT-FLAP SCOREBOARD
+       ============================================= */
+    .flap-container {
+      display: flex; justify-content: flex-end; align-items: center;
+      perspective: 200px;
+    }
+
+    .flap-cell {
+      position: relative;
+      width: 24px; height: 30px;
+      margin: 0 1px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px; font-weight: 700;
+      overflow: hidden;
+      border-radius: 3px;
+      background: #1a1f2e;
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    /* The visible halves */
+    .flap-cell .top, .flap-cell .bottom {
+      position: absolute; left: 0; right: 0;
+      height: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .flap-cell .top {
+      top: 0;
+      background: linear-gradient(180deg, #252b3b 0%, #1e2433 100%);
+      border-bottom: 1px solid #0d1018;
+      align-items: flex-end; padding-bottom: 0;
+    }
+    .flap-cell .top span { transform: translateY(50%); }
+    .flap-cell .bottom {
+      bottom: 0;
+      background: linear-gradient(180deg, #1a1f2e 0%, #161b28 100%);
+      align-items: flex-start; padding-top: 0;
+    }
+    .flap-cell .bottom span { transform: translateY(-50%); }
+
+    /* Hinge line */
+    .flap-cell::after {
+      content: '';
+      position: absolute; left: 0; right: 0;
+      top: 50%; height: 1px;
+      background: #0a0d15;
+      z-index: 5;
+      box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    }
+
+    /* Rivet dots */
+    .flap-cell::before {
+      content: '';
+      position: absolute;
+      left: 2px; right: 2px; top: 50%;
+      transform: translateY(-50%);
+      height: 3px; z-index: 6;
+      background: radial-gradient(circle 1px at 2px 1.5px, #333 0%, transparent 100%),
+                  radial-gradient(circle 1px at calc(100% - 2px) 1.5px, #333 0%, transparent 100%);
+    }
+
+    /* Color classes */
+    .flap-cell.under .top span, .flap-cell.under .bottom span { color: #00d40a; }
+    .flap-cell.over .top span, .flap-cell.over .bottom span { color: #e11d48; }
+    .flap-cell.even .top span, .flap-cell.even .bottom span { color: #94a3b8; }
+
+    /* =============================================
+       FLIP ANIMATION
+       ============================================= */
+    .flap-cell .flip-top, .flap-cell .flip-bottom {
+      position: absolute; left: 0; right: 0;
+      height: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      backface-visibility: hidden;
+      z-index: 10;
+    }
+
+    .flap-cell .flip-top {
+      top: 0;
+      background: linear-gradient(180deg, #252b3b 0%, #1e2433 100%);
+      border-bottom: 1px solid #0d1018;
+      transform-origin: bottom center;
+      align-items: flex-end;
+    }
+    .flap-cell .flip-top span { transform: translateY(50%); }
+
+    .flap-cell .flip-bottom {
+      bottom: 0;
+      background: linear-gradient(180deg, #1a1f2e 0%, #161b28 100%);
+      transform-origin: top center;
+      transform: rotateX(90deg);
+      align-items: flex-start;
+    }
+    .flap-cell .flip-bottom span { transform: translateY(-50%); }
+
+    .flap-cell.flipping .flip-top {
+      animation: flipDown 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+    }
+    .flap-cell.flipping .flip-bottom {
+      animation: flipUp 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) 0.2s forwards;
+    }
+
+    @keyframes flipDown {
+      0% { transform: rotateX(0deg); }
+      100% { transform: rotateX(-90deg); }
+    }
+    @keyframes flipUp {
+      0% { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+
+    .flap-cell.flipping::after {
+      animation: hingeFlash 0.6s ease-out;
+    }
+    @keyframes hingeFlash {
+      0% { box-shadow: 0 0 2px rgba(0,0,0,0.5); }
+      30% { box-shadow: 0 0 6px rgba(255,255,255,0.15); }
+      100% { box-shadow: 0 0 2px rgba(0,0,0,0.5); }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed; top: -70px; left: 50%; transform: translateX(-50%);
+      padding: 10px 24px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      z-index: 100; transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      backdrop-filter: blur(10px); max-width: 90%; text-align: center;
+    }
+    .toast.show { top: 75px; }
+    .toast.info { background: rgba(0,90,4,0.95); color: #fff; box-shadow: 0 4px 20px rgba(0,168,10,0.2); }
+    .toast.movement { background: rgba(251,191,36,0.95); color: #000; box-shadow: 0 4px 20px rgba(251,191,36,0.3); }
+
+    /* =============================================
+       RIGHT PANEL: BETTING ODDS + PARLAYS
+       ============================================= */
+    .right-panel {
+      width: 380px; flex-shrink: 0;
+      display: flex; flex-direction: column;
+      background: #0b1018;
+    }
+
+    .betting-tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: #0d1220;
+    }
+    .betting-tab {
+      flex: 1; padding: 10px 0; text-align: center;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      color: #4a5a6a; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .betting-tab:hover { color: #8892b0; }
+    .betting-tab.active { color: #fff; border-bottom-color: #00a80a; }
+
+    .book-tabs {
+      display: flex; gap: 0; padding: 0;
+      background: #0a0e18;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .book-tab {
+      flex: 1; padding: 8px 0; text-align: center;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+      color: #3a4a5a; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .book-tab:hover { color: #64748b; }
+    .book-tab.active { color: #fbbf24; background: rgba(251,191,36,0.04); }
+
+    .betting-content { flex: 1; overflow-y: auto; }
+    .betting-content::-webkit-scrollbar { width: 4px; }
+    .betting-content::-webkit-scrollbar-thumb { background: #1e2a3a; border-radius: 2px; }
+
+    /* Odds section */
+    .odds-section { display: flex; flex-direction: column; }
+
+    .odds-title-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px 6px;
+    }
+    .odds-section-title {
+      font-size: 11px; font-weight: 700; color: #8892b0;
+      letter-spacing: 0.3px;
+    }
+    .odds-disclaimer {
+      font-size: 9px; color: #3a4a5a; font-style: italic;
+    }
+
+    .odds-header {
+      display: grid; grid-template-columns: 30px 1fr 60px 56px;
+      padding: 6px 16px; font-size: 9px; font-weight: 700; color: #4a5a6a;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .odds-header .right { text-align: right; }
+
+    .odds-row {
+      display: grid; grid-template-columns: 30px 1fr 60px 56px;
+      padding: 5px 16px; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.025);
+      transition: background 0.2s;
+    }
+    .odds-row:hover { background: rgba(255,255,255,0.03); }
+    .odds-row:first-child { background: linear-gradient(90deg, rgba(0,168,10,0.04), transparent); }
+
+    .odds-rank { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #4a5a6a; }
+    .odds-rank.top { color: #fbbf24; }
+    .odds-player { font-size: 12px; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .odds-value {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+      text-align: right; color: #4ade80;
+    }
+    .odds-value.longshot { color: #64748b; }
+    .odds-implied {
+      font-size: 10px; text-align: right; color: #4a5a6a;
+    }
+
+    /* Parlays view */
+    .parlays-view { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+    .parlay-card {
+      background: linear-gradient(135deg, #111827 0%, #0c1019 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 14px 16px;
+      transition: border-color 0.2s;
+    }
+    .parlay-card:hover { border-color: rgba(74,222,128,0.3); }
+    .parlay-card.hot { border-color: rgba(251,191,36,0.25); }
+
+    .parlay-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .parlay-label {
+      font-size: 12px; font-weight: 700; color: #e2e8f0;
+    }
+    .parlay-badge {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; padding: 2px 8px; border-radius: 4px;
+      background: rgba(251,191,36,0.15); color: #fbbf24;
+    }
+    .parlay-badge.safe {
+      background: rgba(74,222,128,0.1); color: #4ade80;
+    }
+    .parlay-badge.longshot {
+      background: rgba(139,92,246,0.15); color: #a78bfa;
+    }
+
+    .parlay-legs { display: flex; flex-direction: column; gap: 0; }
+    .parlay-leg {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .parlay-leg:last-child { border-bottom: none; }
+    .parlay-leg-left { display: flex; align-items: center; gap: 8px; }
+    .parlay-leg-player { font-size: 12px; color: #e2e8f0; font-weight: 600; }
+    .parlay-leg-prop {
+      font-size: 10px; color: #64748b; font-weight: 500;
+      background: rgba(255,255,255,0.04); padding: 1px 6px; border-radius: 3px;
+    }
+    .parlay-leg-odds {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 700; color: #4ade80;
+    }
+
+    .parlay-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 10px; padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .parlay-meta {
+      font-size: 10px; color: #4a5a6a;
+    }
+    .parlay-payout {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .parlay-payout-label { font-size: 10px; color: #64748b; }
+    .parlay-payout-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px; font-weight: 800; color: #fbbf24;
+      text-shadow: 0 0 12px rgba(251,191,36,0.3);
+    }
+
+    /* View toggle: show/hide */
+    .view-odds, .view-parlays { display: none; }
+    .view-odds.active, .view-parlays.active { display: block; }
+
+    /* Ticker */
+    .ticker {
+      background: #0d1220; border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 0; overflow: hidden; white-space: nowrap;
+    }
+    .ticker-content {
+      display: inline-block; animation: ticker 35s linear infinite;
+      font-size: 11px; color: #5a6a7a;
+    }
+    .ticker-content span { margin-right: 50px; }
+    .ticker-content .highlight { color: #00d40a; font-weight: 600; }
+    .ticker-content .alert { color: #fbbf24; font-weight: 600; }
+    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-top">
+        <div class="header-brand">
+          <div>
+            <img class="pga-logo" src="pga_logo.jpg" alt="PGA Tour">
+          </div>
+          <div class="header-titles">
+            <div class="tournament-name" id="tournamentName">Loading...</div>
+            <div class="tournament-subtitle">
+              <span id="courseInfo">Loading tournament data...</span>
+              <span class="dot">·</span>
+              <span id="roundInfo"></span>
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="status-group">
+            <div class="live-badge" id="liveBadge">LOADING</div>
+            <div class="round-info" id="timeDisplay"></div>
+          </div>
+        </div>
+      </div>
+      <div class="header-progress">
+        <div class="bar" id="progressBar" style="width: 0%"></div>
+        <div class="shimmer"></div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- LEFT: Leaderboard -->
+      <div class="left-panel">
+        <div class="course-bar">
+          <div id="refreshInfo" class="refresh-info"></div>
+        </div>
+
+        <div class="col-headers" id="colHeaders" style="display:none">
+          <div>Pos</div>
+          <div>Player</div>
+          <div class="right">Total</div>
+          <div class="right">Today</div>
+          <div style="text-align:center">Thru</div>
+          <div class="right" style="padding-right:4px">Last 3</div>
+        </div>
+
+        <div class="leaderboard" id="leaderboard">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Fetching live leaderboard from ESPN...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Betting Panel -->
+      <div class="right-panel">
+        <div class="betting-tabs">
+          <div class="betting-tab active" data-view="odds" onclick="switchBettingView('odds')">Outright Winners</div>
+          <div class="betting-tab" data-view="parlays" onclick="switchBettingView('parlays')">Parlays</div>
+        </div>
+        <div class="book-tabs">
+          <div class="book-tab active" data-book="fanduel" onclick="switchBook('fanduel')">FanDuel</div>
+          <div class="book-tab" data-book="draftkings" onclick="switchBook('draftkings')">DraftKings</div>
+        </div>
+
+        <div class="betting-content">
+          <!-- Odds View -->
+          <div class="view-odds active" id="viewOdds">
+            <div class="odds-section">
+              <div class="odds-title-row">
+                <div class="odds-section-title">Houston Open</div>
+                <div class="odds-disclaimer">Odds for illustration only</div>
+              </div>
+              <div class="odds-header">
+                <div>#</div>
+                <div>Player</div>
+                <div class="right">Odds</div>
+                <div class="right">Win %</div>
+              </div>
+              <div id="oddsList"></div>
+            </div>
+          </div>
+
+          <!-- Parlays View -->
+          <div class="view-parlays" id="viewParlays">
+            <div class="parlays-view" id="parlayCards"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-content" id="tickerContent"><span>Loading live data...</span></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script>
+    const API_URL = 'https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
+    const REFRESH_INTERVAL = 30000;
+
+    let previousScores = {};
+    let previousTodayScores = {};
+    let previousPositions = {};
+    let isFirstLoad = true;
+    let currentBook = 'fanduel';
+    let currentView = 'odds';
+
+    // ==========================================
+    // SPLIT-FLAP HELPER
+    // ==========================================
+    function createFlapCell(char, colorClass) {
+      return `<div class="flap-cell ${colorClass}">
+        <div class="top"><span>${char}</span></div>
+        <div class="bottom"><span>${char}</span></div>
+      </div>`;
+    }
+
+    function createFlapGroup(text, colorClass) {
+      const chars = text.split('');
+      return `<div class="flap-container">${chars.map(c => createFlapCell(c, colorClass)).join('')}</div>`;
+    }
+
+    function animateFlapCell(cell, oldChar, newChar, colorClass, delay) {
+      setTimeout(() => {
+        const flipTop = document.createElement('div');
+        flipTop.className = 'flip-top';
+        flipTop.innerHTML = `<span>${oldChar}</span>`;
+
+        const flipBottom = document.createElement('div');
+        flipBottom.className = 'flip-bottom';
+        flipBottom.innerHTML = `<span>${newChar}</span>`;
+
+        cell.className = `flap-cell ${colorClass} flipping`;
+
+        const staticTop = cell.querySelector('.top');
+        const staticBottom = cell.querySelector('.bottom');
+
+        staticTop.innerHTML = `<span>${newChar}</span>`;
+        staticBottom.innerHTML = `<span>${oldChar}</span>`;
+
+        cell.appendChild(flipTop);
+        cell.appendChild(flipBottom);
+
+        setTimeout(() => {
+          staticBottom.innerHTML = `<span>${newChar}</span>`;
+        }, 250);
+
+        setTimeout(() => {
+          cell.classList.remove('flipping');
+          if (flipTop.parentNode) flipTop.remove();
+          if (flipBottom.parentNode) flipBottom.remove();
+          staticTop.innerHTML = `<span>${newChar}</span>`;
+          staticBottom.innerHTML = `<span>${newChar}</span>`;
+        }, 700);
+      }, delay);
+    }
+
+    function flipFlapGroup(container, oldText, newText, colorClass) {
+      const cells = container.querySelectorAll('.flap-cell');
+      if (newText.length !== cells.length) {
+        container.innerHTML = newText.split('').map(c => createFlapCell(c, colorClass)).join('');
+        const newCells = container.querySelectorAll('.flap-cell');
+        const oldPadded = oldText.padEnd(newText.length).split('');
+        newCells.forEach((cell, i) => {
+          const oc = oldPadded[i] || ' ';
+          const nc = newText[i] || ' ';
+          if (oc !== nc) animateFlapCell(cell, oc, nc, colorClass, i * 80);
+        });
+        return;
+      }
+      cells.forEach((cell, i) => {
+        const oc = oldText[i] || ' ';
+        const nc = newText[i] || ' ';
+        if (oc !== nc) {
+          animateFlapCell(cell, oc, nc, colorClass, i * 80);
+        } else {
+          cell.className = `flap-cell ${colorClass}`;
+        }
+      });
+    }
+
+    function showToast(msg, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast ${type} show`;
+      setTimeout(() => toast.className = 'toast', 3500);
+    }
+
+    function formatScore(val) {
+      if (val === undefined || val === null || val === '' || val === '--') return '--';
+      const n = parseInt(val);
+      if (isNaN(n)) { return val === 'E' ? ' E' : val; }
+      if (n === 0) return ' E';
+      return n > 0 ? `+${n}` : `${n}`;
+    }
+
+    function padScore(s, len) {
+      while (s.length < len) s = ' ' + s;
+      return s;
+    }
+
+    function scoreClass(val) {
+      if (val === undefined || val === null || val === '' || val === '--' || val === 'E') return 'even';
+      const n = parseInt(val);
+      if (isNaN(n)) return 'even';
+      if (n < 0) return 'under';
+      if (n > 0) return 'over';
+      return 'even';
+    }
+
+    function getHoleDotClass(scoreType) {
+      if (!scoreType) return 'par';
+      const v = parseInt(scoreType);
+      if (isNaN(v)) return 'par';
+      if (v <= -2) return 'eagle';
+      if (v === -1) return 'birdie';
+      if (v === 0) return 'par';
+      if (v === 1) return 'bogey';
+      return 'double';
+    }
+
+    function parseCompetitors(data) {
+      const event = data.events?.[0];
+      if (!event) return { players: [], event: null };
+      const competition = event.competitions?.[0];
+      if (!competition) return { players: [], event };
+      const competitors = competition.competitors || [];
+
+      const players = competitors.map(c => {
+        const athlete = c.athlete || {};
+        const name = athlete.displayName || 'Unknown';
+        const nameParts = name.split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+        const flagUrl = athlete.flag?.href || '';
+        const countryCode = athlete.flag?.alt || '';
+        const totalScore = c.score || '--';
+        const rounds = c.linescores || [];
+        const currentRound = rounds[rounds.length - 1];
+        const todayScore = currentRound?.displayValue || '--';
+
+        let thru = '--';
+        let holesData = [];
+        if (currentRound?.linescores) {
+          const played = currentRound.linescores.filter(h => h.value !== undefined && h.value !== null);
+          holesData = played;
+          thru = played.length;
+          if (thru >= 18) thru = 'F';
+        } else if (c.status?.displayValue) {
+          thru = c.status.displayValue;
+        }
+
+        const last3 = holesData.slice(-3).map(h => ({
+          score: h.displayValue || h.value,
+          type: h.scoreType?.displayValue || '0'
+        }));
+
+        const pos = c.status?.position?.displayName || c.sortOrder || '--';
+
+        return { name, firstName, lastName, flagUrl, countryCode, totalScore, todayScore, thru, last3, pos, id: c.id || athlete.id };
+      });
+
+      return { players, event };
+    }
+
+    function renderLeaderboard(players) {
+      const lb = document.getElementById('leaderboard');
+      const existingRows = {};
+      lb.querySelectorAll('.player-row').forEach(row => {
+        existingRows[row.dataset.id] = row;
+      });
+      document.getElementById('colHeaders').style.display = 'grid';
+      const fragment = document.createDocumentFragment();
+
+      players.forEach((p, i) => {
+        const isLeader = i === 0;
+        const posDisplay = p.pos.toString();
+        const totalFormatted = padScore(formatScore(p.totalScore), 3);
+        const todayFormatted = padScore(formatScore(p.todayScore), 3);
+        const totalColor = scoreClass(p.totalScore);
+        const todayColor = scoreClass(p.todayScore);
+
+        const flagHtml = p.flagUrl
+          ? `<img class="player-flag" src="${p.flagUrl}" alt="${p.countryCode}" onerror="this.style.display='none'">`
+          : `<span class="player-flag-emoji">\u26f3</span>`;
+
+        let last3Html = p.last3.map(h => {
+          const cls = getHoleDotClass(h.type);
+          return `<div class="hole-dot ${cls}">${h.score}</div>`;
+        }).join('');
+
+        const existingRow = existingRows[p.id];
+
+        if (existingRow && !isFirstLoad) {
+          const oldTotal = previousScores[p.id];
+          const oldToday = previousTodayScores[p.id];
+          const oldTotalFormatted = oldTotal !== undefined ? padScore(formatScore(oldTotal), 3) : totalFormatted;
+          const oldTodayFormatted = oldToday !== undefined ? padScore(formatScore(oldToday), 3) : todayFormatted;
+
+          existingRow.querySelector('.pos').textContent = posDisplay;
+          existingRow.querySelector('.pos').className = `pos ${isLeader ? 'leader' : ''}`;
+
+          if (oldTotalFormatted !== totalFormatted) {
+            const totalContainer = existingRow.querySelector('.total-flap');
+            if (totalContainer) flipFlapGroup(totalContainer, oldTotalFormatted, totalFormatted, totalColor);
+          } else {
+            existingRow.querySelectorAll('.total-flap .flap-cell').forEach(c => { c.className = `flap-cell ${totalColor}`; });
+          }
+
+          if (oldTodayFormatted !== todayFormatted) {
+            const todayContainer = existingRow.querySelector('.today-flap');
+            if (todayContainer) flipFlapGroup(todayContainer, oldTodayFormatted, todayFormatted, todayColor);
+          } else {
+            existingRow.querySelectorAll('.today-flap .flap-cell').forEach(c => { c.className = `flap-cell ${todayColor}`; });
+          }
+
+          const thruEl = existingRow.querySelector('.thru');
+          thruEl.textContent = p.thru;
+          thruEl.className = `thru ${p.thru === 'F' ? 'finished' : ''}`;
+          existingRow.querySelector('.recent-holes').innerHTML = last3Html;
+
+          if (previousPositions[p.id] !== undefined) {
+            const oldPos = parseInt(previousPositions[p.id]) || 999;
+            const newPos = parseInt(p.pos) || 999;
+            existingRow.classList.remove('moved-up', 'moved-down');
+            if (newPos < oldPos) {
+              existingRow.offsetHeight;
+              existingRow.classList.add('moved-up');
+            } else if (newPos > oldPos) {
+              existingRow.offsetHeight;
+              existingRow.classList.add('moved-down');
+            }
+          }
+          fragment.appendChild(existingRow);
+        } else {
+          const row = document.createElement('div');
+          row.className = 'player-row';
+          row.dataset.id = p.id;
+          row.innerHTML = `
+            <div class="pos ${isLeader ? 'leader' : ''}">${posDisplay}</div>
+            <div class="player-info">
+              ${flagHtml}
+              <span class="player-name"><span class="first">${p.firstName}</span> ${p.lastName}</span>
+            </div>
+            <div class="total-flap flap-container">${totalFormatted.split('').map(c => createFlapCell(c, totalColor)).join('')}</div>
+            <div class="today-flap flap-container">${todayFormatted.split('').map(c => createFlapCell(c, todayColor)).join('')}</div>
+            <div class="thru ${p.thru === 'F' ? 'finished' : ''}">${p.thru}</div>
+            <div class="recent-holes">${last3Html}</div>
+          `;
+          if (isFirstLoad) {
+            const delay = i * 60;
+            setTimeout(() => {
+              const cells = row.querySelectorAll('.flap-cell');
+              cells.forEach((cell, ci) => {
+                const char = cell.querySelector('.top span').textContent;
+                animateFlapCell(cell, ' ', char, cell.classList.contains('under') ? 'under' : cell.classList.contains('over') ? 'over' : 'even', ci * 50);
+              });
+            }, delay);
+          }
+          fragment.appendChild(row);
+        }
+      });
+
+      lb.innerHTML = '';
+      lb.appendChild(fragment);
+    }
+
+    function buildTicker(players, eventName) {
+      const msgs = [];
+      if (players.length > 0) {
+        const leader = players[0];
+        msgs.push(`<span class="highlight">LEADER:</span> ${leader.name} at ${formatScore(leader.totalScore)} thru ${leader.thru}`);
+      }
+      msgs.push(`<span class="alert">\ud83c\udfc6 ${eventName}</span>`);
+      const hotPlayers = players.filter(p => { const s = parseInt(p.todayScore); return !isNaN(s) && s <= -4; });
+      hotPlayers.forEach(p => msgs.push(`\ud83d\udd25 ${p.name} shooting ${formatScore(p.todayScore)} today`));
+      if (players.length >= 5) {
+        const top5 = players.slice(0, 5).map(p => `${p.lastName} (${formatScore(p.totalScore)})`).join(' \u2022 ');
+        msgs.push(`<span class="highlight">TOP 5:</span> ${top5}`);
+      }
+      msgs.push(`Auto-refreshing every 30s \u2014 Data from ESPN`);
+      const content = msgs.map(m => `<span>${m}</span>`).join('');
+      document.getElementById('tickerContent').innerHTML = content + content;
+    }
+
+    async function fetchLeaderboard() {
+      try {
+        const resp = await fetch(API_URL);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        const { players, event } = parseCompetitors(data);
+
+        if (!event) {
+          document.getElementById('leaderboard').innerHTML = '<div class="error-msg">No active tournament found<br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button></div>';
+          return;
+        }
+
+        const eventName = event.name || 'PGA Tour Event';
+        document.getElementById('tournamentName').textContent = eventName;
+
+        const status = event.status?.type?.state || 'pre';
+        const badge = document.getElementById('liveBadge');
+        if (status === 'in') { badge.textContent = '\u25cf LIVE'; badge.className = 'live-badge live'; }
+        else if (status === 'post') { badge.textContent = 'FINAL'; badge.className = 'live-badge final'; }
+        else { badge.textContent = 'UPCOMING'; badge.className = 'live-badge final'; }
+
+        const courseName = event.courses?.[0]?.name || '';
+        const courseParVal = event.courses?.[0]?.par || 72;
+        const courseYards = event.courses?.[0]?.yards || '';
+        document.getElementById('courseInfo').textContent =
+          `${courseName ? courseName : 'Course TBD'} \u00b7 Par ${courseParVal}${courseYards ? ' \u00b7 ' + courseYards.toLocaleString() + ' yds' : ''}`;
+        const roundNum = event.status?.period || '';
+        document.getElementById('roundInfo').textContent = roundNum ? `Round ${roundNum}` : '';
+
+        const totalRounds = 4;
+        const roundProgress = roundNum ? ((roundNum - 1) / totalRounds) * 100 : 0;
+        const leaderThru = players[0]?.thru;
+        let holeProgress = 0;
+        if (leaderThru === 'F') holeProgress = 100;
+        else if (typeof leaderThru === 'number') holeProgress = (leaderThru / 18) * 100;
+        const totalProgress = status === 'post' ? 100 : Math.min(roundProgress + (holeProgress / totalRounds), 99);
+        document.getElementById('progressBar').style.width = totalProgress + '%';
+
+        renderLeaderboard(players);
+        buildTicker(players, eventName);
+
+        players.forEach(p => {
+          const prev = previousScores[p.id];
+          if (prev !== undefined && prev !== p.totalScore) {
+            const oldN = parseInt(prev), newN = parseInt(p.totalScore);
+            if (!isNaN(oldN) && !isNaN(newN) && newN < oldN) {
+              const oldPos = parseInt(previousPositions[p.id]) || 999;
+              const newPos = parseInt(p.pos) || 999;
+              if (newPos < oldPos && newPos <= 5)
+                showToast(`\ud83d\udcc8 ${p.name} moves to ${p.pos} at ${formatScore(p.totalScore)}!`, 'movement');
+            }
+          }
+        });
+
+        players.forEach(p => {
+          previousScores[p.id] = p.totalScore;
+          previousTodayScores[p.id] = p.todayScore;
+          previousPositions[p.id] = p.pos;
+        });
+
+        isFirstLoad = false;
+        document.getElementById('refreshInfo').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+
+      } catch (err) {
+        console.error('Fetch error:', err);
+        const lb = document.getElementById('leaderboard');
+        if (!lb.querySelector('.player-row')) {
+          lb.innerHTML = `<div class="error-msg">Failed to fetch leaderboard<br><span style="font-size:12px;color:#5a6a7a">${err.message}</span><br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button></div>`;
+        }
+      }
+    }
+
+    function updateTime() {
+      document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    // ==========================================
+    // BETTING ODDS DATA
+    // ==========================================
+    const oddsData = {
+      fanduel: [
+        { player: 'Min Woo Lee', odds: '+1300' },
+        { player: 'Chris Gotterup', odds: '+1600' },
+        { player: 'Jake Knapp', odds: '+2000' },
+        { player: 'Brooks Koepka', odds: '+2200' },
+        { player: 'Sam Burns', odds: '+2200' },
+        { player: 'Nicolai H\u00f8jgaard', odds: '+2500' },
+        { player: 'Rickie Fowler', odds: '+3000' },
+        { player: 'Kurt Kitayama', odds: '+3000' },
+        { player: 'Marco Penge', odds: '+3300' },
+        { player: 'Michael Thorbjornsen', odds: '+3000' },
+        { player: 'Ben Griffin', odds: '+3500' },
+        { player: 'Adam Scott', odds: '+3500' },
+        { player: 'Harris English', odds: '+3500' },
+        { player: 'Shane Lowry', odds: '+4500' },
+        { player: 'Tony Finau', odds: '+5500' },
+      ],
+      draftkings: [
+        { player: 'Min Woo Lee', odds: '+1400' },
+        { player: 'Chris Gotterup', odds: '+1800' },
+        { player: 'Jake Knapp', odds: '+2000' },
+        { player: 'Brooks Koepka', odds: '+2000' },
+        { player: 'Sam Burns', odds: '+2500' },
+        { player: 'Nicolai H\u00f8jgaard', odds: '+2500' },
+        { player: 'Rickie Fowler', odds: '+3000' },
+        { player: 'Kurt Kitayama', odds: '+3000' },
+        { player: 'Marco Penge', odds: '+3000' },
+        { player: 'Michael Thorbjornsen', odds: '+3000' },
+        { player: 'Ben Griffin', odds: '+3500' },
+        { player: 'Adam Scott', odds: '+3500' },
+        { player: 'Harris English', odds: '+3500' },
+        { player: 'Harry Hall', odds: '+4000' },
+        { player: 'Shane Lowry', odds: '+4000' },
+        { player: 'Tony Finau', odds: '+6000' },
+        { player: 'Will Zalatoris', odds: '+7000' },
+      ]
+    };
+
+    // ==========================================
+    // PARLAY DATA
+    // ==========================================
+    const parlayData = {
+      fanduel: [
+        {
+          label: 'Top 10 Value Parlay', badge: 'Value', badgeClass: '',
+          hot: true,
+          legs: [
+            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+210' },
+            { player: 'Min Woo Lee', prop: 'Top 10', odds: '-120' },
+            { player: 'Nicolai H\u00f8jgaard', prop: 'Top 10', odds: '+240' },
+          ],
+          payout: '$187', book: 'FanDuel'
+        },
+        {
+          label: 'Top 20 Safe Parlay', badge: 'Safe', badgeClass: 'safe',
+          hot: false,
+          legs: [
+            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+114' },
+            { player: 'Sam Burns', prop: 'Top 20', odds: '-135' },
+            { player: 'Jake Knapp', prop: 'Top 20', odds: '-110' },
+            { player: 'Wyndham Clark', prop: 'Top 20', odds: '+170' },
+          ],
+          payout: '$142', book: 'FanDuel'
+        },
+        {
+          label: 'Top 10 Longshot', badge: 'Longshot', badgeClass: 'longshot',
+          hot: false,
+          legs: [
+            { player: 'Marco Penge', prop: 'Top 10', odds: '+350' },
+            { player: 'Shane Lowry', prop: 'Top 10', odds: '+280' },
+            { player: 'Tony Finau', prop: 'Top 10', odds: '+320' },
+          ],
+          payout: '$890', book: 'FanDuel'
+        },
+        {
+          label: 'Mixed Props Parlay', badge: 'Value', badgeClass: '',
+          hot: true,
+          legs: [
+            { player: 'M. Thorbjornsen', prop: 'Top 5', odds: '+500' },
+            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+210' },
+            { player: 'Adam Scott', prop: 'Top 20', odds: '+110' },
+          ],
+          payout: '$425', book: 'FanDuel'
+        },
+      ],
+      draftkings: [
+        {
+          label: 'Top 10 Value Parlay', badge: 'Value', badgeClass: '',
+          hot: true,
+          legs: [
+            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+200' },
+            { player: 'Min Woo Lee', prop: 'Top 10', odds: '-115' },
+            { player: 'Chris Gotterup', prop: 'Top 10', odds: '+175' },
+          ],
+          payout: '$155', book: 'DraftKings'
+        },
+        {
+          label: 'Top 20 Safe Parlay', badge: 'Safe', badgeClass: 'safe',
+          hot: false,
+          legs: [
+            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+120' },
+            { player: 'Sam Burns', prop: 'Top 20', odds: '-130' },
+            { player: 'Harris English', prop: 'Top 20', odds: '+105' },
+            { player: 'Kurt Kitayama', prop: 'Top 20', odds: '-105' },
+          ],
+          payout: '$128', book: 'DraftKings'
+        },
+        {
+          label: 'Top 10 Longshot', badge: 'Longshot', badgeClass: 'longshot',
+          hot: false,
+          legs: [
+            { player: 'Shane Lowry', prop: 'Top 10', odds: '+300' },
+            { player: 'Tony Finau', prop: 'Top 10', odds: '+340' },
+            { player: 'Will Zalatoris', prop: 'Top 10', odds: '+380' },
+          ],
+          payout: '$1,770', book: 'DraftKings'
+        },
+        {
+          label: 'Mixed Props Parlay', badge: 'Value', badgeClass: '',
+          hot: true,
+          legs: [
+            { player: 'Koepka', prop: 'Top 5', odds: '+510' },
+            { player: 'Nicolai H\u00f8jgaard', prop: 'Top 10', odds: '+225' },
+            { player: 'Ben Griffin', prop: 'Top 20', odds: '+130' },
+          ],
+          payout: '$580', book: 'DraftKings'
+        },
+      ]
+    };
+
+    // ==========================================
+    // RENDER FUNCTIONS
+    // ==========================================
+    function impliedProb(oddsStr) {
+      const n = parseInt(oddsStr.replace('+', ''));
+      if (isNaN(n) || n <= 0) return '\u2014';
+      return (100 / (n + 100) * 100).toFixed(1) + '%';
+    }
+
+    function renderOdds(book) {
+      const list = document.getElementById('oddsList');
+      const data = oddsData[book] || [];
+      list.innerHTML = data.map((d, i) => {
+        const isLongshot = parseInt(d.odds.replace('+', '')) >= 5000;
+        return `<div class="odds-row">
+          <div class="odds-rank ${i === 0 ? 'top' : ''}">${i + 1}</div>
+          <div class="odds-player">${d.player}</div>
+          <div class="odds-value ${isLongshot ? 'longshot' : ''}">${d.odds}</div>
+          <div class="odds-implied">${impliedProb(d.odds)}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderParlays(book) {
+      const container = document.getElementById('parlayCards');
+      const data = parlayData[book] || [];
+      container.innerHTML = data.map(p => {
+        const legsHtml = p.legs.map(l => `
+          <div class="parlay-leg">
+            <div class="parlay-leg-left">
+              <span class="parlay-leg-player">${l.player}</span>
+              <span class="parlay-leg-prop">${l.prop}</span>
+            </div>
+            <span class="parlay-leg-odds">${l.odds}</span>
+          </div>
+        `).join('');
+        return `
+          <div class="parlay-card ${p.hot ? 'hot' : ''}">
+            <div class="parlay-header">
+              <div class="parlay-label">${p.label}</div>
+              <div class="parlay-badge ${p.badgeClass}">${p.badge}</div>
+            </div>
+            <div class="parlay-legs">${legsHtml}</div>
+            <div class="parlay-footer">
+              <div class="parlay-meta">${p.legs.length}-Leg \u00b7 ${p.book} \u00b7 $10 bet</div>
+              <div class="parlay-payout">
+                <span class="parlay-payout-label">Wins</span>
+                <span class="parlay-payout-value">${p.payout}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function switchBettingView(view) {
+      currentView = view;
+      document.querySelectorAll('.betting-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.betting-tab[data-view="${view}"]`).classList.add('active');
+      document.getElementById('viewOdds').classList.toggle('active', view === 'odds');
+      document.getElementById('viewParlays').classList.toggle('active', view === 'parlays');
+    }
+
+    function switchBook(book) {
+      currentBook = book;
+      document.querySelectorAll('.book-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.book-tab[data-book="${book}"]`).classList.add('active');
+      renderOdds(book);
+      renderParlays(book);
+    }
+
+    // Initialize
+    renderOdds('fanduel');
+    renderParlays('fanduel');
+
+    fetchLeaderboard();
+    setInterval(fetchLeaderboard, REFRESH_INTERVAL);
+    setInterval(updateTime, 1000);
+    updateTime();
+  </script>
+</body>
+</html>
