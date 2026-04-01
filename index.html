@@ -1063,33 +1063,33 @@
         { player: 'Si Woo Kim', odds: '+2200' },
         { player: 'Sepp Straka', odds: '+2200' },
         { player: 'Hideki Matsuyama', odds: '+2200' },
-        { player: 'Nicolai H\u00f8jgaard', odds: '+2250' },
-        { player: 'Maverick McNealy', odds: '+2400' },
-        { player: 'Michael Thorbjornsen', odds: '+2500' },
-        { player: 'Rickie Fowler', odds: '+2700' },
-        { player: 'Keith Mitchell', odds: '+3000' },
-        { player: 'Denny McCarthy', odds: '+3300' },
-        { player: 'J.J. Spaun', odds: '+3100' },
-        { player: 'Alex Noren', odds: '+3800' },
-        { player: 'Gary Woodland', odds: '+5100' },
-        { player: 'Marco Penge', odds: '+5200' },
+        { player: 'Maverick McNealy', odds: '+3000' },
+        { player: 'Michael Thorbjornsen', odds: '+3000' },
+        { player: 'Rickie Fowler', odds: '+3000' },
+        { player: 'J.J. Spaun', odds: '+3300' },
+        { player: 'Keith Mitchell', odds: '+3300' },
+        { player: 'Alex Noren', odds: '+3300' },
+        { player: 'Ryo Hisatsune', odds: '+3500' },
+        { player: 'Daniel Berger', odds: '+4000' },
+        { player: 'Nick Taylor', odds: '+5500' },
       ],
       draftkings: [
         { player: 'Tommy Fleetwood', odds: '+1450' },
-        { player: 'Ludvig \u00c5berg', odds: '+1600' },
         { player: 'Russell Henley', odds: '+1600' },
         { player: 'Robert MacIntyre', odds: '+1650' },
-        { player: 'Si Woo Kim', odds: '+1750' },
-        { player: 'Jordan Spieth', odds: '+1900' },
+        { player: 'Ludvig \u00c5berg', odds: '+1650' },
+        { player: 'Si Woo Kim', odds: '+1800' },
+        { player: 'Jordan Spieth', odds: '+1950' },
         { player: 'Nicolai H\u00f8jgaard', odds: '+2250' },
         { player: 'Hideki Matsuyama', odds: '+2300' },
         { player: 'Maverick McNealy', odds: '+2400' },
         { player: 'Michael Thorbjornsen', odds: '+2500' },
         { player: 'Rickie Fowler', odds: '+2700' },
-        { player: 'Sepp Straka', odds: '+3300' },
         { player: 'J.J. Spaun', odds: '+3100' },
+        { player: 'Sepp Straka', odds: '+3300' },
         { player: 'Keith Mitchell', odds: '+3700' },
-        { player: 'Alex Noren', odds: '+3800' },
+        { player: 'Alex Noren', odds: '+3900' },
+        { player: 'Daniel Berger', odds: '+4700' },
         { player: 'Ryo Hisatsune', odds: '+5000' },
         { player: 'Gary Woodland', odds: '+5100' },
         { player: 'Nick Taylor', odds: '+5200' },
@@ -1103,88 +1103,81 @@
     const parlayData = {
       fanduel: [
         {
-          label: 'Favorites Top 10', badge: 'Value', badgeClass: '',
+          label: 'Spieth + MacIntyre + Hisatsune', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+135' },
+            { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
+            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+250' },
+            { player: 'Ryo Hisatsune', prop: 'Top 10', odds: '+350' },
+          ],
+          payout: '$866', book: 'FanDuel'
+        },
+        {
+          label: 'Spieth + MacIntyre Pair', badge: 'Value', badgeClass: '',
+          hot: false,
+          legs: [
             { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
             { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+250' },
           ],
-          payout: '$265', book: 'FanDuel'
+          payout: '$193', book: 'FanDuel'
         },
         {
-          label: 'Top 20 Safe Play', badge: 'Safe', badgeClass: 'safe',
+          label: 'Hisatsune + Novak Longshot', badge: 'Longshot', badgeClass: 'longshot',
           hot: false,
           legs: [
-            { player: 'Russell Henley', prop: 'Top 20', odds: '-130' },
-            { player: 'Ludvig \u00c5berg', prop: 'Top 20', odds: '-140' },
-            { player: 'Sepp Straka', prop: 'Top 20', odds: '+110' },
-            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+120' },
+            { player: 'Ryo Hisatsune', prop: 'Top 5', odds: '+700' },
+            { player: 'Andrew Novak', prop: 'Top 10', odds: '+700' },
           ],
-          payout: '$98', book: 'FanDuel'
+          payout: '$640', book: 'FanDuel'
         },
         {
-          label: 'Longshot Top 10', badge: 'Longshot', badgeClass: 'longshot',
-          hot: false,
-          legs: [
-            { player: 'Denny McCarthy', prop: 'Top 10', odds: '+400' },
-            { player: 'Keith Mitchell', prop: 'Top 10', odds: '+350' },
-            { player: 'Gary Woodland', prop: 'Top 10', odds: '+600' },
-          ],
-          payout: '$2,450', book: 'FanDuel'
-        },
-        {
-          label: 'Spieth Hometown Hero', badge: 'Value', badgeClass: '',
+          label: 'Spieth + Novak Value', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
             { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
-            { player: 'Hideki Matsuyama', prop: 'Top 10', odds: '+220' },
-            { player: 'Maverick McNealy', prop: 'Top 20', odds: '+100' },
+            { player: 'Andrew Novak', prop: 'Top 10', odds: '+700' },
           ],
-          payout: '$345', book: 'FanDuel'
+          payout: '$440', book: 'FanDuel'
         },
       ],
       draftkings: [
         {
-          label: 'Favorites Top 10', badge: 'Value', badgeClass: '',
-          hot: true,
-          legs: [
-            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+130' },
-            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+160' },
-            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+250' },
-          ],
-          payout: '$225', book: 'DraftKings'
-        },
-        {
-          label: 'Top 20 Safe Play', badge: 'Safe', badgeClass: 'safe',
-          hot: false,
-          legs: [
-            { player: 'Jordan Spieth', prop: 'Top 20', odds: '-110' },
-            { player: 'Russell Henley', prop: 'Top 20', odds: '-125' },
-            { player: 'Nicolai H\u00f8jgaard', prop: 'Top 20', odds: '+105' },
-            { player: 'Sepp Straka', prop: 'Top 20', odds: '+115' },
-          ],
-          payout: '$92', book: 'DraftKings'
-        },
-        {
-          label: 'Longshot Top 10', badge: 'Longshot', badgeClass: 'longshot',
-          hot: false,
-          legs: [
-            { player: 'Denny McCarthy', prop: 'Top 10', odds: '+420' },
-            { player: 'Ryo Hisatsune', prop: 'Top 10', odds: '+550' },
-            { player: 'Nick Taylor', prop: 'Top 10', odds: '+500' },
-          ],
-          payout: '$4,200', book: 'DraftKings'
-        },
-        {
-          label: 'Mixed Props', badge: 'Value', badgeClass: '',
+          label: 'Spieth + Straka + MacIntyre', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
             { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
-            { player: 'Si Woo Kim', prop: 'Top 10', odds: '+200' },
-            { player: 'Rickie Fowler', prop: 'Top 20', odds: '+110' },
+            { player: 'Sepp Straka', prop: 'Top 10', odds: '+305' },
+            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+250' },
           ],
-          payout: '$380', book: 'DraftKings'
+          payout: '$780', book: 'DraftKings'
+        },
+        {
+          label: 'MacIntyre + Straka Safe', badge: 'Safe', badgeClass: 'safe',
+          hot: false,
+          legs: [
+            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+250' },
+            { player: 'Sepp Straka', prop: 'Top 10', odds: '+305' },
+          ],
+          payout: '$142', book: 'DraftKings'
+        },
+        {
+          label: 'Hisatsune + Novak + Straka', badge: 'Longshot', badgeClass: 'longshot',
+          hot: false,
+          legs: [
+            { player: 'Ryo Hisatsune', prop: 'Top 5', odds: '+700' },
+            { player: 'Andrew Novak', prop: 'Top 10', odds: '+700' },
+            { player: 'Sepp Straka', prop: 'Top 10', odds: '+305' },
+          ],
+          payout: '$2,592', book: 'DraftKings'
+        },
+        {
+          label: 'Spieth + Hisatsune', badge: 'Value', badgeClass: '',
+          hot: true,
+          legs: [
+            { player: 'Jordan Spieth', prop: 'Top 5', odds: '+450' },
+            { player: 'Ryo Hisatsune', prop: 'Top 10', odds: '+350' },
+          ],
+          payout: '$248', book: 'DraftKings'
         },
       ]
     };
