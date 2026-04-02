@@ -976,7 +976,12 @@
         const countryCode = athlete.flag?.alt || '';
         const totalScore = c.score || '--';
         const rounds = c.linescores || [];
-        const currentRound = rounds[rounds.length - 1];
+        // Find the active round: last round that has actual scoring data
+        let currentRound = rounds[rounds.length - 1];
+        // If the latest round has no data (only period), fall back to previous round
+        if (currentRound && !currentRound.displayValue && !currentRound.linescores && rounds.length > 1) {
+          currentRound = rounds[rounds.length - 2];
+        }
         const todayScore = currentRound?.displayValue || '--';
 
         let thru = '--';
@@ -988,6 +993,9 @@
           if (thru >= 18) thru = 'F';
         } else if (c.status?.displayValue) {
           thru = c.status.displayValue;
+        } else if (currentRound?.displayValue) {
+          // Round has a score but no hole-by-hole data — round is complete
+          thru = 'F';
         }
 
         const last3 = holesData.slice(-3).map(h => ({
