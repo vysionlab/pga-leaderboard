@@ -391,7 +391,7 @@
     }
 
     .odds-header {
-      display: grid; grid-template-columns: 30px 1fr 60px 56px;
+      display: grid; grid-template-columns: 30px 1fr 50px 60px 56px;
       padding: 6px 16px; font-size: 9px; font-weight: 700; color: #4a5a6a;
       text-transform: uppercase; letter-spacing: 0.8px;
       border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -399,11 +399,18 @@
     .odds-header .right { text-align: right; }
 
     .odds-row {
-      display: grid; grid-template-columns: 30px 1fr 60px 56px;
+      display: grid; grid-template-columns: 30px 1fr 50px 60px 56px;
       padding: 5px 16px; align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.025);
       transition: background 0.2s;
     }
+    .odds-live {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600;
+      color: #64748b; text-align: center;
+    }
+    .odds-live.top5 { color: #4ade80; }
+    .odds-live.top10 { color: #94a3b8; }
+    .odds-live.leader { color: #fbbf24; }
     .odds-row:hover { background: rgba(255,255,255,0.03); }
     .odds-row:first-child { background: linear-gradient(90deg, rgba(0,168,10,0.04), transparent); }
 
@@ -463,6 +470,14 @@
       font-size: 10px; color: #64748b; font-weight: 500;
       background: rgba(255,255,255,0.04); padding: 1px 6px; border-radius: 3px;
     }
+    .parlay-leg-live {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; font-weight: 600; color: #64748b;
+      margin-left: auto; margin-right: 8px;
+    }
+    .parlay-leg-live.hitting { color: #4ade80; }
+    .parlay-leg-live.close { color: #fbbf24; }
+    .parlay-leg-live.miss { color: #ef4444; }
     .parlay-leg-odds {
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px; font-weight: 700; color: #4ade80;
@@ -567,8 +582,8 @@
 
       .course-bar { padding: 5px 12px; font-size: 10px; }
 
-      .odds-row { grid-template-columns: 28px 1fr 56px 48px; padding: 5px 12px; }
-      .odds-header { grid-template-columns: 28px 1fr 56px 48px; padding: 6px 12px; }
+      .odds-row { grid-template-columns: 28px 1fr 42px 52px 42px; padding: 5px 12px; }
+      .odds-header { grid-template-columns: 28px 1fr 42px 52px 42px; padding: 6px 12px; }
       .odds-player { font-size: 11px; }
       .odds-value { font-size: 11px; }
 
@@ -663,6 +678,7 @@
               <div class="odds-header">
                 <div>#</div>
                 <div>Player</div>
+                <div>Live</div>
                 <div class="right">Odds</div>
                 <div class="right">Win %</div>
               </div>
@@ -695,6 +711,7 @@
     let isFirstLoad = true;
     let currentBook = 'fanduel';
     let currentView = 'odds';
+    let livePlayerData = {}; // name -> { pos, score } from leaderboard
 
     // ==========================================
     // SPLIT-FLAP HELPER
@@ -1059,6 +1076,14 @@
           previousPositions[p.id] = p.pos;
         });
 
+        // Update live player lookup for odds/parlays
+        livePlayerData = {};
+        players.forEach(p => {
+          livePlayerData[p.name.toLowerCase()] = { pos: p.pos, score: formatScore(p.totalScore), thru: p.thru };
+        });
+        renderOdds(currentBook);
+        renderParlays(currentBook);
+
         isFirstLoad = false;
         document.getElementById('refreshInfo').textContent = `Updated ${new Date().toLocaleTimeString()}`;
 
@@ -1216,33 +1241,61 @@
       return (100 / (n + 100) * 100).toFixed(1) + '%';
     }
 
+    function getLiveInfo(playerName) {
+      return livePlayerData[playerName.toLowerCase()] || null;
+    }
+
     function renderOdds(book) {
       const list = document.getElementById('oddsList');
       const data = oddsData[book] || [];
       list.innerHTML = data.map((d, i) => {
         const isLongshot = parseInt(d.odds.replace('+', '')) >= 5000;
+        const live = getLiveInfo(d.player);
+        let liveHtml = '<div class="odds-live">--</div>';
+        if (live) {
+          const posNum = parseInt(live.pos.replace('T', '')) || 999;
+          const cls = posNum === 1 ? 'leader' : posNum <= 5 ? 'top5' : posNum <= 10 ? 'top10' : '';
+          liveHtml = `<div class="odds-live ${cls}">${live.pos} (${live.score})</div>`;
+        }
         return `<div class="odds-row">
           <div class="odds-rank ${i === 0 ? 'top' : ''}">${i + 1}</div>
           <div class="odds-player">${d.player}</div>
+          ${liveHtml}
           <div class="odds-value ${isLongshot ? 'longshot' : ''}">${d.odds}</div>
           <div class="odds-implied">${impliedProb(d.odds)}</div>
         </div>`;
       }).join('');
     }
 
+    function getParlayLegStatus(player, prop) {
+      const live = getLiveInfo(player);
+      if (!live) return { text: '--', cls: '' };
+      const posNum = parseInt(live.pos.replace('T', '')) || 999;
+      const target = parseInt(prop.replace(/\D/g, '')) || 999;
+      let cls = 'miss';
+      if (posNum <= target) cls = 'hitting';
+      else if (posNum <= target + 5) cls = 'close';
+      return { text: `${live.pos}`, cls };
+    }
+
     function renderParlays(book) {
       const container = document.getElementById('parlayCards');
       const data = parlayData[book] || [];
       container.innerHTML = data.map(p => {
-        const legsHtml = p.legs.map(l => `
+        const legsHtml = p.legs.map(l => {
+          const status = getParlayLegStatus(l.player, l.prop);
+          const hasLive = Object.keys(livePlayerData).length > 0;
+          const liveTag = hasLive ? `<span class="parlay-leg-live ${status.cls}">${status.text}</span>` : '';
+          return `
           <div class="parlay-leg">
             <div class="parlay-leg-left">
               <span class="parlay-leg-player">${l.player}</span>
               <span class="parlay-leg-prop">${l.prop}</span>
             </div>
+            ${liveTag}
             <span class="parlay-leg-odds">${l.odds}</span>
           </div>
-        `).join('');
+        `}).join('');
         return `
           <div class="parlay-card ${p.hot ? 'hot' : ''}">
             <div class="parlay-header">
