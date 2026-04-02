@@ -1381,7 +1381,7 @@
       const live = getLiveInfo(player);
       if (!live) return { text: '--', cls: '' };
       const posNum = parseInt(live.pos.replace('T', '')) || 999;
-      const target = parseInt(prop.replace(/\D/g, '')) || 999;
+      const target = prop === 'Outright Win' ? 1 : parseInt(prop.replace(/\D/g, '')) || 999;
       let cls = 'miss';
       if (posNum <= target) cls = 'hitting';
       else if (posNum <= target + 5) cls = 'close';
@@ -1617,7 +1617,7 @@
           }).length;
           if (hitting === p.legs.length) statusBadge = '<div class="parlay-badge safe">ALL HITTING</div>';
           else if (hitting > 0) statusBadge = `<div class="parlay-badge">${hitting}/${p.legs.length} HITTING</div>`;
-          else statusBadge = '<div class="parlay-badge longshot">MISSING</div>';
+          else statusBadge = `<div class="parlay-badge longshot">0/${p.legs.length} HITTING</div>`;
         }
 
         return `
