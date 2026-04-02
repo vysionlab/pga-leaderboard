@@ -817,7 +817,30 @@
       if (!competition) return { players: [], event };
       const competitors = competition.competitors || [];
 
-      const players = competitors.map(c => {
+      // Count how many competitors share each score to determine ties
+      const scoreCounts = {};
+      competitors.forEach(c => {
+        const s = c.score || '--';
+        scoreCounts[s] = (scoreCounts[s] || 0) + 1;
+      });
+
+      // Assign proper positions: first occurrence of each score gets the rank, ties get "T" prefix
+      let currentPos = 1;
+      let lastScore = null;
+      let lastPos = 1;
+      const positionMap = new Map();
+      competitors.forEach((c, i) => {
+        const s = c.score || '--';
+        if (s === lastScore) {
+          positionMap.set(i, lastPos);
+        } else {
+          lastPos = i + 1;
+          positionMap.set(i, lastPos);
+          lastScore = s;
+        }
+      });
+
+      const players = competitors.map((c, i) => {
         const athlete = c.athlete || {};
         const name = athlete.displayName || 'Unknown';
         const nameParts = name.split(' ');
@@ -846,7 +869,9 @@
           type: h.scoreType?.displayValue || '0'
         }));
 
-        const pos = c.status?.position?.displayName || c.sortOrder || '--';
+        const rank = positionMap.get(i) || i + 1;
+        const isTied = scoreCounts[totalScore] > 1 && totalScore !== '--';
+        const pos = isTied ? `T${rank}` : `${rank}`;
 
         return { name, firstName, lastName, flagUrl, countryCode, totalScore, todayScore, thru, last3, pos, id: c.id || athlete.id };
       });
