@@ -470,6 +470,57 @@
       font-size: 10px; color: #64748b; font-weight: 500;
       background: rgba(255,255,255,0.04); padding: 1px 6px; border-radius: 3px;
     }
+    /* Builder view */
+    .builder-view { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+    .builder-add { display: flex; gap: 8px; align-items: center; }
+    .builder-select {
+      flex: 1; background: #111827; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px; padding: 8px 10px; font-size: 12px; font-family: 'Inter', sans-serif;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a5a6a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center;
+      padding-right: 24px;
+    }
+    .builder-select:focus { outline: none; border-color: #4ade80; }
+    .builder-add-btn {
+      background: #00a80a; color: #fff; border: none; border-radius: 6px;
+      padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer;
+      white-space: nowrap;
+    }
+    .builder-add-btn:hover { background: #00c40c; }
+    .builder-legs { display: flex; flex-direction: column; gap: 0; }
+    .builder-leg {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .builder-leg-info { display: flex; align-items: center; gap: 8px; }
+    .builder-leg-name { font-size: 12px; font-weight: 600; color: #e2e8f0; }
+    .builder-leg-prop {
+      font-size: 10px; color: #64748b; background: rgba(255,255,255,0.04);
+      padding: 1px 6px; border-radius: 3px;
+    }
+    .builder-leg-odds {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #4ade80;
+    }
+    .builder-leg-remove {
+      background: none; border: none; color: #ef4444; cursor: pointer;
+      font-size: 14px; padding: 2px 6px; opacity: 0.6;
+    }
+    .builder-leg-remove:hover { opacity: 1; }
+    .builder-summary {
+      background: linear-gradient(135deg, #111827 0%, #0c1019 100%);
+      border: 1px solid rgba(74,222,128,0.15); border-radius: 10px; padding: 14px 16px;
+    }
+    .builder-summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 4px 0;
+    }
+    .builder-summary-label { font-size: 12px; color: #64748b; }
+    .builder-summary-value {
+      font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #e2e8f0;
+    }
+    .builder-summary-value.payout { color: #4ade80; font-size: 18px; }
+
     .parlay-leg-live {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px; font-weight: 600; color: #64748b;
@@ -502,8 +553,8 @@
     }
 
     /* View toggle: show/hide */
-    .view-odds, .view-parlays { display: none; }
-    .view-odds.active, .view-parlays.active { display: block; }
+    .view-odds, .view-parlays, .view-builder { display: none; }
+    .view-odds.active, .view-parlays.active, .view-builder.active { display: block; }
 
     /* Ticker */
     .ticker {
@@ -661,6 +712,7 @@
         <div class="betting-tabs">
           <div class="betting-tab active" data-view="odds" onclick="switchBettingView('odds')">Outright Winners</div>
           <div class="betting-tab" data-view="parlays" onclick="switchBettingView('parlays')">Parlays</div>
+          <div class="betting-tab" data-view="builder" onclick="switchBettingView('builder')">Builder</div>
         </div>
         <div class="book-tabs">
           <div class="book-tab active" data-book="fanduel" onclick="switchBook('fanduel')">FanDuel</div>
@@ -689,6 +741,39 @@
           <!-- Parlays View -->
           <div class="view-parlays" id="viewParlays">
             <div class="parlays-view" id="parlayCards"></div>
+          </div>
+
+          <!-- Builder View -->
+          <div class="view-builder" id="viewBuilder">
+            <div class="builder-view">
+              <div class="builder-add">
+                <select id="builderPlayer" class="builder-select">
+                  <option value="">Select player...</option>
+                </select>
+                <select id="builderProp" class="builder-select">
+                  <option value="win">Outright Win</option>
+                  <option value="top5">Top 5</option>
+                  <option value="top10">Top 10</option>
+                  <option value="top20">Top 20</option>
+                </select>
+                <button class="builder-add-btn" onclick="addBuilderLeg()">Add</button>
+              </div>
+              <div id="builderLegs" class="builder-legs"></div>
+              <div class="builder-summary" id="builderSummary" style="display:none;">
+                <div class="builder-summary-row">
+                  <span class="builder-summary-label">Combined Odds</span>
+                  <span class="builder-summary-value" id="builderCombinedOdds">--</span>
+                </div>
+                <div class="builder-summary-row">
+                  <span class="builder-summary-label">$10 Bet Wins</span>
+                  <span class="builder-summary-value payout" id="builderPayout">--</span>
+                </div>
+                <div class="builder-summary-row">
+                  <span class="builder-summary-label">Implied Probability</span>
+                  <span class="builder-summary-value" id="builderProb">--</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1321,6 +1406,8 @@
       document.querySelector(`.betting-tab[data-view="${view}"]`).classList.add('active');
       document.getElementById('viewOdds').classList.toggle('active', view === 'odds');
       document.getElementById('viewParlays').classList.toggle('active', view === 'parlays');
+      document.getElementById('viewBuilder').classList.toggle('active', view === 'builder');
+      if (view === 'builder') populateBuilderDropdown();
     }
 
     function switchBook(book) {
@@ -1329,6 +1416,101 @@
       document.querySelector(`.book-tab[data-book="${book}"]`).classList.add('active');
       renderOdds(book);
       renderParlays(book);
+    }
+
+    // ==========================================
+    // PARLAY BUILDER
+    // ==========================================
+    let builderLegs = [];
+
+    function populateBuilderDropdown() {
+      const sel = document.getElementById('builderPlayer');
+      const current = sel.value;
+      const allPlayers = new Set();
+
+      // Collect players from odds data
+      Object.values(oddsData).forEach(arr => arr.forEach(d => allPlayers.add(d.player)));
+
+      const sorted = [...allPlayers].sort();
+      sel.innerHTML = '<option value="">Select player...</option>' +
+        sorted.map(p => `<option value="${p}">${p}</option>`).join('');
+      if (current) sel.value = current;
+    }
+
+    function getOddsForLeg(player, prop) {
+      const book = currentBook;
+      const data = oddsData[book] || [];
+      const entry = data.find(d => d.player === player);
+      if (!entry) return null;
+      const winOdds = parseInt(entry.odds.replace('+', ''));
+      if (isNaN(winOdds) || winOdds <= 0) return null;
+      // Rough prop odds estimates based on outright odds
+      if (prop === 'win') return winOdds;
+      if (prop === 'top5') return Math.round(winOdds / 4);
+      if (prop === 'top10') return Math.round(winOdds / 7);
+      if (prop === 'top20') return Math.round(winOdds / 12);
+      return winOdds;
+    }
+
+    function addBuilderLeg() {
+      const playerSel = document.getElementById('builderPlayer');
+      const propSel = document.getElementById('builderProp');
+      const player = playerSel.value;
+      const prop = propSel.value;
+      if (!player) return;
+
+      // Don't add duplicates
+      if (builderLegs.find(l => l.player === player && l.prop === prop)) return;
+
+      const odds = getOddsForLeg(player, prop);
+      if (odds === null) return;
+
+      builderLegs.push({ player, prop, odds });
+      playerSel.value = '';
+      renderBuilder();
+    }
+
+    function removeBuilderLeg(index) {
+      builderLegs.splice(index, 1);
+      renderBuilder();
+    }
+
+    function renderBuilder() {
+      const container = document.getElementById('builderLegs');
+      const summary = document.getElementById('builderSummary');
+      const propLabels = { win: 'Outright Win', top5: 'Top 5', top10: 'Top 10', top20: 'Top 20' };
+
+      container.innerHTML = builderLegs.map((l, i) => {
+        const live = getLiveInfo(l.player);
+        const liveTag = live ? `<span class="parlay-leg-live" style="margin-left:4px;">${live.pos}</span>` : '';
+        return `<div class="builder-leg">
+          <div class="builder-leg-info">
+            <span class="builder-leg-name">${l.player}</span>
+            <span class="builder-leg-prop">${propLabels[l.prop]}</span>
+            ${liveTag}
+          </div>
+          <span class="builder-leg-odds">+${l.odds}</span>
+          <button class="builder-leg-remove" onclick="removeBuilderLeg(${i})">✕</button>
+        </div>`;
+      }).join('');
+
+      if (builderLegs.length > 0) {
+        // Calculate combined decimal odds
+        let combinedDecimal = 1;
+        builderLegs.forEach(l => {
+          combinedDecimal *= (l.odds / 100) + 1;
+        });
+        const combinedAmerican = Math.round((combinedDecimal - 1) * 100);
+        const payout = (10 * combinedDecimal).toFixed(2);
+        const prob = (1 / combinedDecimal * 100).toFixed(1);
+
+        document.getElementById('builderCombinedOdds').textContent = `+${combinedAmerican}`;
+        document.getElementById('builderPayout').textContent = `$${payout}`;
+        document.getElementById('builderProb').textContent = `${prob}%`;
+        summary.style.display = 'block';
+      } else {
+        summary.style.display = 'none';
+      }
     }
 
     // Initialize
