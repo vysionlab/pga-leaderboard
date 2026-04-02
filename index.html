@@ -520,6 +520,22 @@
       font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #e2e8f0;
     }
     .builder-summary-value.payout { color: #4ade80; font-size: 18px; }
+    .builder-save-btn {
+      width: 100%; margin-top: 12px; padding: 10px;
+      background: #00a80a; color: #fff; border: none; border-radius: 8px;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      letter-spacing: 0.3px;
+    }
+    .builder-save-btn:hover { background: #00c40c; }
+    .saved-parlays-header {
+      font-size: 11px; font-weight: 700; color: #4ade80; text-transform: uppercase;
+      letter-spacing: 1px; padding-bottom: 6px;
+    }
+    .saved-parlay-remove {
+      background: none; border: none; color: #ef4444; cursor: pointer;
+      font-size: 11px; padding: 2px 6px; opacity: 0.6;
+    }
+    .saved-parlay-remove:hover { opacity: 1; }
 
     .parlay-leg-live {
       font-family: 'JetBrains Mono', monospace;
@@ -740,6 +756,13 @@
 
           <!-- Parlays View -->
           <div class="view-parlays" id="viewParlays">
+            <div id="savedParlaysSection" class="parlays-view" style="display:none;">
+              <div class="saved-parlays-header">My Parlays</div>
+              <div id="savedParlayCards"></div>
+            </div>
+            <div class="parlays-view">
+              <div class="saved-parlays-header" style="color:#4a5a6a; margin-top:4px;">Suggested</div>
+            </div>
             <div class="parlays-view" id="parlayCards"></div>
           </div>
 
@@ -772,6 +795,7 @@
                   <span class="builder-summary-label">Implied Probability</span>
                   <span class="builder-summary-value" id="builderProb">--</span>
                 </div>
+                <button class="builder-save-btn" onclick="saveBuilderParlay()">Save &amp; Track Parlay</button>
               </div>
             </div>
           </div>
@@ -1168,6 +1192,7 @@
         });
         renderOdds(currentBook);
         renderParlays(currentBook);
+        renderSavedParlays();
 
         isFirstLoad = false;
         document.getElementById('refreshInfo').textContent = `Updated ${new Date().toLocaleTimeString()}`;
@@ -1513,9 +1538,112 @@
       }
     }
 
+    // ==========================================
+    // SAVED PARLAYS
+    // ==========================================
+    let savedParlays = JSON.parse(localStorage.getItem('savedParlays') || '[]');
+
+    function saveBuilderParlay() {
+      if (builderLegs.length === 0) return;
+      const propLabels = { win: 'Outright Win', top5: 'Top 5', top10: 'Top 10', top20: 'Top 20' };
+      let combinedDecimal = 1;
+      builderLegs.forEach(l => { combinedDecimal *= (l.odds / 100) + 1; });
+      const combinedAmerican = Math.round((combinedDecimal - 1) * 100);
+      const payout = (10 * combinedDecimal).toFixed(2);
+
+      const parlay = {
+        id: Date.now(),
+        legs: builderLegs.map(l => ({
+          player: l.player,
+          prop: propLabels[l.prop],
+          odds: `+${l.odds}`,
+          propKey: l.prop
+        })),
+        combinedOdds: `+${combinedAmerican}`,
+        payout: `$${payout}`,
+        book: currentBook === 'fanduel' ? 'FanDuel' : 'DraftKings',
+        createdAt: new Date().toLocaleDateString()
+      };
+
+      savedParlays.push(parlay);
+      localStorage.setItem('savedParlays', JSON.stringify(savedParlays));
+      builderLegs = [];
+      renderBuilder();
+      renderSavedParlays();
+      switchBettingView('parlays');
+    }
+
+    function removeSavedParlay(id) {
+      savedParlays = savedParlays.filter(p => p.id !== id);
+      localStorage.setItem('savedParlays', JSON.stringify(savedParlays));
+      renderSavedParlays();
+    }
+
+    function renderSavedParlays() {
+      const section = document.getElementById('savedParlaysSection');
+      const container = document.getElementById('savedParlayCards');
+      if (savedParlays.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      section.style.display = 'block';
+
+      container.innerHTML = savedParlays.map(p => {
+        const legsHtml = p.legs.map(l => {
+          const status = getParlayLegStatus(l.player, l.prop);
+          const hasLive = Object.keys(livePlayerData).length > 0;
+          const liveTag = hasLive ? `<span class="parlay-leg-live ${status.cls}">${status.text}</span>` : '';
+          return `
+          <div class="parlay-leg">
+            <div class="parlay-leg-left">
+              <span class="parlay-leg-player">${l.player}</span>
+              <span class="parlay-leg-prop">${l.prop}</span>
+            </div>
+            ${liveTag}
+            <span class="parlay-leg-odds">${l.odds}</span>
+          </div>`;
+        }).join('');
+
+        // Count how many legs are hitting
+        const hasLive = Object.keys(livePlayerData).length > 0;
+        let statusBadge = '';
+        if (hasLive) {
+          const hitting = p.legs.filter(l => {
+            const live = getLiveInfo(l.player);
+            if (!live) return false;
+            const posNum = parseInt(live.pos.replace('T', '')) || 999;
+            const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
+            return posNum <= target;
+          }).length;
+          if (hitting === p.legs.length) statusBadge = '<div class="parlay-badge safe">ALL HITTING</div>';
+          else if (hitting > 0) statusBadge = `<div class="parlay-badge">${hitting}/${p.legs.length} HITTING</div>`;
+          else statusBadge = '<div class="parlay-badge longshot">MISSING</div>';
+        }
+
+        return `
+          <div class="parlay-card" style="border-color: rgba(74,222,128,0.2);">
+            <div class="parlay-header">
+              <div class="parlay-label">${p.legs.map(l => l.player.split(' ').pop()).join(' + ')}</div>
+              ${statusBadge}
+              <button class="saved-parlay-remove" onclick="removeSavedParlay(${p.id})">Remove</button>
+            </div>
+            <div class="parlay-legs">${legsHtml}</div>
+            <div class="parlay-footer">
+              <div class="parlay-meta">${p.legs.length}-Leg · ${p.book} · $10 bet</div>
+              <div class="parlay-payout">
+                <span class="parlay-payout-label">Wins</span>
+                <span class="parlay-payout-value">${p.payout}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     // Initialize
     renderOdds('fanduel');
     renderParlays('fanduel');
+    renderSavedParlays();
 
     // ==========================================
     // MOBILE PANEL SWITCHING
