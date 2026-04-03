@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pga-live-v2';
+const CACHE_NAME = 'pga-live-v3';
 const ASSETS = [
   '/pga-leaderboard/',
   '/pga-leaderboard/index.html',
@@ -7,8 +7,8 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
   self.skipWaiting();
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
 });
 
 self.addEventListener('activate', e => {
@@ -20,14 +20,15 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network-first for API calls, cache-first for assets
-  if (e.request.url.includes('api.espn.com')) {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
-    );
-  } else {
-    e.respondWith(
-      caches.match(e.request).then(r => r || fetch(e.request))
-    );
-  }
+  // Network-first for everything — fall back to cache only when offline
+  e.respondWith(
+    fetch(e.request).then(resp => {
+      // Cache successful responses for offline use
+      if (resp.ok) {
+        const clone = resp.clone();
+        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+      }
+      return resp;
+    }).catch(() => caches.match(e.request))
+  );
 });
