@@ -198,11 +198,11 @@
       display: flex; align-items: center; justify-content: center;
       font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
     }
-    .hole-dot.birdie { background: #166534; color: #4ade80; border: none; border-radius: 50%; }
-    .hole-dot.eagle { background: #854d0e; color: #fbbf24; border: none; border-radius: 50%; }
-    .hole-dot.bogey { background: #3b1764; color: #c4b5fd; border: none; border-radius: 4px; }
-    .hole-dot.double { background: #7f1d1d; color: #fca5a5; border: none; border-radius: 4px; }
-    .hole-dot.par { background: rgba(148,163,184,0.08); color: #64748b; border: none; border-radius: 50%; }
+    .hole-dot.birdie { background: transparent; color: #f87171; border: 2px solid #ef4444; border-radius: 50%; }
+    .hole-dot.eagle { background: transparent; color: #ef4444; border: 2px solid #ef4444; border-radius: 50%; outline: 2px solid #ef4444; outline-offset: 2px; width: 20px; height: 20px; margin: 3px; }
+    .hole-dot.bogey { background: transparent; color: #d1d5db; border: 2px solid #6b7280; border-radius: 2px; }
+    .hole-dot.double { background: transparent; color: #9ca3af; border: 2px solid #6b7280; border-radius: 2px; outline: 2px solid #6b7280; outline-offset: 2px; width: 20px; height: 20px; margin: 3px; }
+    .hole-dot.par { background: transparent; color: #94a3b8; border: none; }
 
     /* =============================================
        SPLIT-FLAP SCOREBOARD
@@ -737,14 +737,15 @@
     }
     .sc-table td { color: #94a3b8; }
     .sc-table td.total-cell { font-weight: 800; color: #e2e8f0; background: rgba(255,255,255,0.03); }
+    .sc-table td { overflow: visible; }
     .sc-table td.birdie span, .sc-table td.eagle span, .sc-table td.bogey span, .sc-table td.double span, .sc-table td.par span {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px; font-size: 11px; font-weight: 700;
+      width: 26px; height: 26px; font-size: 11px; font-weight: 700;
     }
-    .sc-table td.birdie span { background: #166534; color: #4ade80; border-radius: 50%; }
-    .sc-table td.eagle span { background: #854d0e; color: #fbbf24; border-radius: 50%; }
-    .sc-table td.bogey span { background: #3b1764; color: #c4b5fd; border-radius: 4px; }
-    .sc-table td.double span { background: #7f1d1d; color: #fca5a5; border-radius: 4px; }
+    .sc-table td.birdie span { color: #fca5a5; border: 2px solid #ef4444; border-radius: 50%; }
+    .sc-table td.eagle span { color: #ef4444; border: 2px solid #ef4444; border-radius: 50%; outline: 2px solid #ef4444; outline-offset: 2px; width: 22px; height: 22px; }
+    .sc-table td.bogey span { color: #d1d5db; border: 2px solid #6b7280; border-radius: 2px; }
+    .sc-table td.double span { color: #9ca3af; border: 2px solid #6b7280; border-radius: 2px; outline: 2px solid #6b7280; outline-offset: 2px; width: 22px; height: 22px; }
     .sc-table td.par span { color: #94a3b8; }
     .sc-table td.par { color: #94a3b8; }
     .sc-table tr.par-row td { background: rgba(255,255,255,0.015); font-size: 10px; }
@@ -754,12 +755,12 @@
       flex-wrap: wrap;
     }
     .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #4a5a6a; }
-    .legend-dot { width: 12px; height: 12px; }
-    .legend-dot.eagle-dot { border-radius: 50%; background: #854d0e; }
-    .legend-dot.birdie-dot { border-radius: 50%; background: #166534; }
-    .legend-dot.par-dot { border-radius: 50%; background: rgba(148,163,184,0.15); }
-    .legend-dot.bogey-dot { border-radius: 3px; background: #3b1764; }
-    .legend-dot.double-dot { border-radius: 3px; background: #7f1d1d; }
+    .legend-dot { width: 12px; height: 12px; box-sizing: border-box; }
+    .legend-dot.eagle-dot { border-radius: 50%; border: 2px solid #ef4444; outline: 1.5px solid #ef4444; outline-offset: 1.5px; width: 10px; height: 10px; margin: 2px 3px 2px 1px; }
+    .legend-dot.birdie-dot { border-radius: 50%; border: 2px solid #ef4444; }
+    .legend-dot.par-dot { border-radius: 50%; background: #64748b; width: 6px; height: 6px; margin: 3px; }
+    .legend-dot.bogey-dot { border-radius: 2px; border: 2px solid #6b7280; }
+    .legend-dot.double-dot { border-radius: 2px; border: 2px solid #6b7280; outline: 1.5px solid #6b7280; outline-offset: 1.5px; width: 10px; height: 10px; margin: 2px 3px 2px 1px; }
 
     /* Search input */
     .search-input {
