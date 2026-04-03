@@ -674,30 +674,90 @@
     }
     .scorecard-modal {
       background: #111827; border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px; padding: 20px 24px; max-width: 520px; width: 92%;
-      max-height: 80vh; overflow-y: auto; position: relative;
+      border-radius: 14px; padding: 20px 24px; max-width: 600px; width: 95%;
+      max-height: 85vh; overflow-y: auto; position: relative;
     }
     .scorecard-close {
       position: absolute; top: 12px; right: 16px; background: none; border: none;
       color: #64748b; font-size: 22px; cursor: pointer; line-height: 1;
     }
     .scorecard-close:hover { color: #fff; }
-    .scorecard-name { font-size: 16px; font-weight: 800; color: #e2e8f0; margin-bottom: 4px; }
-    .scorecard-pos { font-size: 12px; color: #64748b; margin-bottom: 14px; }
-    .scorecard-rounds { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .scorecard-round {
-      background: #1a1f2e; border-radius: 8px; padding: 8px 14px; text-align: center;
-      min-width: 60px;
+    .scorecard-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-right: 30px;
     }
-    .scorecard-round-label { font-size: 10px; color: #4a5a6a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .scorecard-round-score { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: #e2e8f0; margin-top: 2px; }
-    .scorecard-holes-title { font-size: 11px; color: #4a5a6a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-    .scorecard-holes { display: flex; gap: 4px; flex-wrap: wrap; }
-    .scorecard-hole {
-      width: 26px; height: 26px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+    .scorecard-name { font-size: 18px; font-weight: 800; color: #e2e8f0; }
+    .scorecard-pos-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+      background: #1a1f2e; color: #fbbf24; padding: 4px 10px; border-radius: 6px;
     }
+    .scorecard-stats {
+      display: flex; gap: 16px; margin-bottom: 18px; flex-wrap: wrap;
+    }
+    .scorecard-stat {
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .scorecard-stat-label { font-size: 9px; color: #4a5a6a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+    .scorecard-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: #e2e8f0; }
+    .scorecard-stat-value.under { color: #00d40a; }
+    .scorecard-stat-value.over { color: #e11d48; }
+    .scorecard-stat-value.even { color: #94a3b8; }
+
+    .scorecard-rounds-summary {
+      display: flex; gap: 6px; margin-bottom: 20px;
+    }
+    .scorecard-round-chip {
+      flex: 1; background: #1a1f2e; border-radius: 8px; padding: 8px 6px;
+      text-align: center; border: 1px solid rgba(255,255,255,0.04);
+    }
+    .scorecard-round-chip.active { border-color: rgba(74,222,128,0.3); background: rgba(0,168,10,0.06); }
+    .scorecard-round-chip-label { font-size: 9px; color: #4a5a6a; font-weight: 700; letter-spacing: 0.5px; }
+    .scorecard-round-chip-score { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; margin-top: 2px; }
+
+    .scorecard-table-title {
+      font-size: 11px; color: #4ade80; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .scorecard-table-title .round-score-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      background: #1a1f2e; padding: 2px 8px; border-radius: 4px; color: #e2e8f0;
+    }
+    .scorecard-grid {
+      display: grid; gap: 0; margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; overflow: hidden;
+    }
+    .scorecard-grid-row {
+      display: grid; grid-template-columns: 40px repeat(9, 1fr) 44px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .scorecard-grid-row:last-child { border-bottom: none; }
+    .scorecard-grid-row.header-row { background: #1a1f2e; }
+    .scorecard-grid-row.par-row { background: rgba(255,255,255,0.02); }
+    .sc-cell {
+      padding: 5px 2px; text-align: center; font-size: 11px; font-weight: 600;
+      font-family: 'JetBrains Mono', monospace; color: #64748b;
+    }
+    .sc-cell.label { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; color: #4a5a6a; text-transform: uppercase; letter-spacing: 0.3px; }
+    .sc-cell.total-cell { font-weight: 800; color: #e2e8f0; background: rgba(255,255,255,0.02); }
+    .sc-cell.birdie { color: #4ade80; background: rgba(0,168,10,0.08); }
+    .sc-cell.eagle { color: #fbbf24; background: rgba(234,179,8,0.1); }
+    .sc-cell.bogey { color: #fb7185; background: rgba(225,29,72,0.06); }
+    .sc-cell.double { color: #e11d48; background: rgba(225,29,72,0.1); }
+    .sc-cell.par { color: #94a3b8; }
+
+    .scorecard-legend {
+      display: flex; gap: 12px; justify-content: center; margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #4a5a6a; }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .legend-dot.eagle-dot { background: rgba(234,179,8,0.3); border: 1px solid #eab308; }
+    .legend-dot.birdie-dot { background: rgba(0,168,10,0.3); border: 1px solid #00a80a; }
+    .legend-dot.par-dot { background: rgba(148,163,184,0.1); border: 1px solid rgba(148,163,184,0.2); }
+    .legend-dot.bogey-dot { background: rgba(225,29,72,0.2); border: 1px solid rgba(225,29,72,0.4); }
+    .legend-dot.double-dot { background: rgba(225,29,72,0.35); border: 1px solid rgba(225,29,72,0.6); }
 
     /* Search input */
     .search-input {
@@ -1830,7 +1890,6 @@
     // SCORECARD MODAL
     // ==========================================
     function showScorecard(player) {
-      // Remove existing overlay if any
       const existing = document.querySelector('.scorecard-overlay');
       if (existing) existing.remove();
 
@@ -1838,31 +1897,112 @@
       overlay.className = 'scorecard-overlay';
       overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
 
-      const roundsHtml = player.roundsData.map(r => {
-        if (r.score === '--' && r.holes.length === 0) return '';
-        return `<div class="scorecard-round">
-          <div class="scorecard-round-label">R${r.round}</div>
-          <div class="scorecard-round-score">${r.score}</div>
+      // Round chips
+      const playedRounds = player.roundsData.filter(r => r.score !== '--' || r.holes.length > 0);
+      const lastRound = playedRounds[playedRounds.length - 1];
+      const roundChipsHtml = ['R1','R2','R3','R4'].map((label, i) => {
+        const rd = player.roundsData[i];
+        const hasData = rd && (rd.score !== '--' || rd.holes.length > 0);
+        const isActive = rd === lastRound && hasData;
+        const scoreVal = hasData ? rd.score : '--';
+        const scoreColor = scoreClass(scoreVal);
+        return `<div class="scorecard-round-chip ${isActive ? 'active' : ''}">
+          <div class="scorecard-round-chip-label">${label}</div>
+          <div class="scorecard-round-chip-score ${scoreColor}">${hasData ? formatScore(scoreVal).trim() : '--'}</div>
         </div>`;
-      }).filter(Boolean).join('');
+      }).join('');
 
-      // Current round hole-by-hole
-      const currentRd = player.roundsData.filter(r => r.holes.length > 0).pop();
-      let holesHtml = '';
-      if (currentRd && currentRd.holes.length > 0) {
-        holesHtml = `<div class="scorecard-holes-title">Round ${currentRd.round} Hole-by-Hole</div>
-          <div class="scorecard-holes">${currentRd.holes.map((h, i) => {
-            const cls = getHoleDotClass(h.type);
-            return `<div class="scorecard-hole hole-dot ${cls}" title="Hole ${i+1}">${h.score}</div>`;
-          }).join('')}</div>`;
-      }
+      // Build hole-by-hole grid for rounds with data
+      let gridsHtml = '';
+      playedRounds.forEach(rd => {
+        if (rd.holes.length === 0) return;
+        const holes = rd.holes;
+        const front9 = holes.slice(0, 9);
+        const back9 = holes.slice(9, 18);
+
+        function buildNine(nineHoles, startHole, label) {
+          if (nineHoles.length === 0) return '';
+          const holeNums = nineHoles.map((_, i) => startHole + i);
+          const totalStrokes = nineHoles.reduce((s, h) => s + (parseInt(h.score) || 0), 0);
+
+          const headerCells = `<div class="sc-cell label">${label}</div>` +
+            holeNums.map(n => `<div class="sc-cell label">${n}</div>`).join('') +
+            (nineHoles.length === 9 ? '<div class="sc-cell label">Tot</div>' : '');
+
+          // We don't have par data per hole from API, so show score type as context
+          const scoreCells = `<div class="sc-cell label">Score</div>` +
+            nineHoles.map(h => {
+              const cls = getHoleDotClass(h.type);
+              return `<div class="sc-cell ${cls}">${h.score}</div>`;
+            }).join('') +
+            (nineHoles.length === 9 ? `<div class="sc-cell total-cell">${totalStrokes}</div>` : '');
+
+          // Relative to par row
+          const relCells = `<div class="sc-cell label">+/-</div>` +
+            nineHoles.map(h => {
+              const v = parseInt(h.type);
+              const cls = getHoleDotClass(h.type);
+              let display = '';
+              if (!isNaN(v)) {
+                if (v === 0) display = '-';
+                else if (v > 0) display = '+' + v;
+                else display = '' + v;
+              }
+              return `<div class="sc-cell ${cls}">${display}</div>`;
+            }).join('') +
+            '<div class="sc-cell"></div>';
+
+          // Pad grid to always 9 holes + label + total
+          const cols = nineHoles.length + 2;
+          return `<div class="scorecard-grid" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">
+            <div class="scorecard-grid-row header-row" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">${headerCells}</div>
+            <div class="scorecard-grid-row" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">${scoreCells}</div>
+            <div class="scorecard-grid-row par-row" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">${relCells}</div>
+          </div>`;
+        }
+
+        const roundScore = rd.score !== '--' ? formatScore(rd.score).trim() : '';
+        const roundTag = roundScore ? `<span class="round-score-tag">${roundScore}</span>` : '';
+        gridsHtml += `<div class="scorecard-table-title">Round ${rd.round} ${roundTag}</div>`;
+        gridsHtml += buildNine(front9, 1, 'Out');
+        if (back9.length > 0) {
+          gridsHtml += buildNine(back9, 10, 'In');
+        }
+      });
+
+      // Stats summary
+      const totalColor = scoreClass(player.totalScore);
+      const todayColor = scoreClass(player.todayScore);
 
       overlay.innerHTML = `<div class="scorecard-modal">
         <button class="scorecard-close" onclick="this.closest('.scorecard-overlay').remove()">&times;</button>
-        <div class="scorecard-name">${player.name}</div>
-        <div class="scorecard-pos">Position: ${player.pos} &middot; Total: ${formatScore(player.totalScore)} &middot; Today: ${formatScore(player.todayScore)}</div>
-        <div class="scorecard-rounds">${roundsHtml || '<span style="color:#4a5a6a;font-size:12px;">No round data available</span>'}</div>
-        ${holesHtml}
+        <div class="scorecard-header">
+          <div class="scorecard-name">${player.name}</div>
+          <div class="scorecard-pos-badge">${player.pos}</div>
+        </div>
+        <div class="scorecard-stats">
+          <div class="scorecard-stat">
+            <div class="scorecard-stat-label">Total</div>
+            <div class="scorecard-stat-value ${totalColor}">${formatScore(player.totalScore).trim()}</div>
+          </div>
+          <div class="scorecard-stat">
+            <div class="scorecard-stat-label">Today</div>
+            <div class="scorecard-stat-value ${todayColor}">${formatScore(player.todayScore).trim()}</div>
+          </div>
+          <div class="scorecard-stat">
+            <div class="scorecard-stat-label">Thru</div>
+            <div class="scorecard-stat-value">${player.thru}</div>
+          </div>
+        </div>
+        <div class="scorecard-rounds-summary">${roundChipsHtml}</div>
+        ${gridsHtml || '<div style="color:#4a5a6a;font-size:12px;text-align:center;padding:20px;">No hole-by-hole data available yet</div>'}
+        <div class="scorecard-legend">
+          <div class="legend-item"><div class="legend-dot eagle-dot"></div> Eagle+</div>
+          <div class="legend-item"><div class="legend-dot birdie-dot"></div> Birdie</div>
+          <div class="legend-item"><div class="legend-dot par-dot"></div> Par</div>
+          <div class="legend-item"><div class="legend-dot bogey-dot"></div> Bogey</div>
+          <div class="legend-item"><div class="legend-dot double-dot"></div> Double+</div>
+        </div>
       </div>`;
 
       document.body.appendChild(overlay);
