@@ -7,6 +7,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="PGA Live">
   <meta name="theme-color" content="#0d1220">
+  <meta property="og:title" content="PGA Tour Live Leaderboard">
+  <meta property="og:description" content="Real-time PGA Tour scores, betting odds, and parlay builder with live split-flap animations.">
+  <meta property="og:image" content="icon-512.png">
+  <meta property="og:type" content="website">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>PGA Tour Live Leaderboard</title>
@@ -660,6 +664,90 @@
 
       .ticker-content { font-size: 10px; }
     }
+
+    /* Scorecard Modal */
+    .scorecard-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75); z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .scorecard-modal {
+      background: #111827; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 20px 24px; max-width: 520px; width: 92%;
+      max-height: 80vh; overflow-y: auto; position: relative;
+    }
+    .scorecard-close {
+      position: absolute; top: 12px; right: 16px; background: none; border: none;
+      color: #64748b; font-size: 22px; cursor: pointer; line-height: 1;
+    }
+    .scorecard-close:hover { color: #fff; }
+    .scorecard-name { font-size: 16px; font-weight: 800; color: #e2e8f0; margin-bottom: 4px; }
+    .scorecard-pos { font-size: 12px; color: #64748b; margin-bottom: 14px; }
+    .scorecard-rounds { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .scorecard-round {
+      background: #1a1f2e; border-radius: 8px; padding: 8px 14px; text-align: center;
+      min-width: 60px;
+    }
+    .scorecard-round-label { font-size: 10px; color: #4a5a6a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .scorecard-round-score { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: #e2e8f0; margin-top: 2px; }
+    .scorecard-holes-title { font-size: 11px; color: #4a5a6a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .scorecard-holes { display: flex; gap: 4px; flex-wrap: wrap; }
+    .scorecard-hole {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+    }
+
+    /* Search input */
+    .search-input {
+      background: #111827; border: 1px solid rgba(255,255,255,0.08); border-radius: 5px;
+      color: #e2e8f0; font-size: 11px; padding: 4px 10px; width: 160px;
+      font-family: 'Inter', sans-serif; outline: none;
+    }
+    .search-input::placeholder { color: #3a4a5a; }
+    .search-input:focus { border-color: rgba(74,222,128,0.4); }
+
+    /* Cut line */
+    .cut-line-row {
+      display: flex; align-items: center; justify-content: center;
+      padding: 4px 16px; background: rgba(225,29,72,0.06);
+      border-top: 1px dashed rgba(225,29,72,0.3);
+      border-bottom: 1px dashed rgba(225,29,72,0.3);
+    }
+    .cut-line-label {
+      font-size: 10px; font-weight: 700; color: #e11d48;
+      letter-spacing: 1.5px; text-transform: uppercase;
+    }
+
+    /* Position delta */
+    .pos-delta {
+      font-size: 9px; font-weight: 700; margin-left: 2px;
+    }
+    .pos-delta.up { color: #4ade80; }
+    .pos-delta.down { color: #ef4444; }
+
+    /* Bet amount input */
+    .bet-amount-input {
+      background: #111827; border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;
+      color: #e2e8f0; font-size: 11px; padding: 3px 6px; width: 60px; text-align: right;
+      font-family: 'JetBrains Mono', monospace; outline: none;
+    }
+    .bet-amount-input:focus { border-color: rgba(74,222,128,0.4); }
+    .bet-amount-row {
+      display: flex; align-items: center; gap: 6px; justify-content: flex-end;
+    }
+
+    /* Add to builder button on suggested parlays */
+    .parlay-add-builder-btn {
+      background: rgba(0,168,10,0.15); color: #4ade80; border: 1px solid rgba(0,168,10,0.3);
+      border-radius: 5px; padding: 3px 10px; font-size: 10px; font-weight: 700;
+      cursor: pointer; white-space: nowrap; letter-spacing: 0.3px;
+    }
+    .parlay-add-builder-btn:hover { background: rgba(0,168,10,0.25); }
+
+    /* Player row clickable */
+    .player-row { cursor: pointer; }
   </style>
 </head>
 <body>
@@ -704,6 +792,7 @@
       <div class="left-panel" id="leftPanel">
         <div class="course-bar">
           <div id="refreshInfo" class="refresh-info"></div>
+          <input type="text" class="search-input" id="playerSearch" placeholder="Search players..." oninput="filterLeaderboard()">
         </div>
 
         <div class="col-headers" id="colHeaders" style="display:none">
@@ -740,7 +829,7 @@
           <div class="view-odds active" id="viewOdds">
             <div class="odds-section">
               <div class="odds-title-row">
-                <div class="odds-section-title">Valero Texas Open</div>
+                <div class="odds-section-title" id="oddsSectionTitle">Tournament Odds</div>
                 <div class="odds-disclaimer">Pre-tournament odds \u00b7 Verify on sportsbook</div>
               </div>
               <div class="odds-header">
@@ -788,7 +877,11 @@
                   <span class="builder-summary-value" id="builderCombinedOdds">--</span>
                 </div>
                 <div class="builder-summary-row">
-                  <span class="builder-summary-label">$10 Bet Wins</span>
+                  <span class="builder-summary-label">Bet Amount</span>
+                  <span class="bet-amount-row">$<input type="number" class="bet-amount-input" id="builderBetAmount" value="10" min="1" step="1" onchange="renderBuilder()" oninput="renderBuilder()"></span>
+                </div>
+                <div class="builder-summary-row">
+                  <span class="builder-summary-label">Potential Win</span>
                   <span class="builder-summary-value payout" id="builderPayout">--</span>
                 </div>
                 <div class="builder-summary-row">
@@ -821,6 +914,9 @@
     let currentBook = 'fanduel';
     let currentView = 'odds';
     let livePlayerData = {}; // name -> { pos, score } from leaderboard
+    let allPlayersData = []; // full player array for scorecard access
+    let positionDeltas = {}; // id -> delta number
+    let currentRoundNum = 0; // current tournament round
 
     // ==========================================
     // SPLIT-FLAP HELPER
@@ -1007,13 +1103,32 @@
         const isTied = scoreCounts[totalScore] > 1 && totalScore !== '--';
         const pos = isTied ? `T${rank}` : `${rank}`;
 
-        return { name, firstName, lastName, flagUrl, countryCode, totalScore, todayScore, thru, last3, pos, id: c.id || athlete.id };
+        // Tee time: if thru is '--' and teeTime exists, show tee time
+        if (thru === '--' && c.status?.teeTime) {
+          try {
+            const teeDate = new Date(c.status.teeTime);
+            thru = teeDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+          } catch(e) { /* keep '--' */ }
+        }
+
+        // Store full rounds data for scorecard
+        const roundsData = (c.linescores || []).map((r, ri) => ({
+          round: ri + 1,
+          score: r.displayValue || '--',
+          holes: (r.linescores || []).map(h => ({
+            score: h.displayValue || h.value,
+            type: h.scoreType?.displayValue || '0'
+          }))
+        }));
+
+        return { name, firstName, lastName, flagUrl, countryCode, totalScore, todayScore, thru, last3, pos, id: c.id || athlete.id, roundsData };
       });
 
       return { players, event };
     }
 
     function renderLeaderboard(players) {
+      allPlayersData = players;
       const lb = document.getElementById('leaderboard');
       const existingRows = {};
       lb.querySelectorAll('.player-row').forEach(row => {
@@ -1022,9 +1137,28 @@
       document.getElementById('colHeaders').style.display = 'grid';
       const fragment = document.createDocumentFragment();
 
+      // Calculate position deltas
+      if (!isFirstLoad) {
+        players.forEach(p => {
+          if (previousPositions[p.id] !== undefined) {
+            const oldPos = parseInt(String(previousPositions[p.id]).replace('T', '')) || 999;
+            const newPos = parseInt(String(p.pos).replace('T', '')) || 999;
+            const delta = oldPos - newPos;
+            if (delta !== 0) positionDeltas[p.id] = delta;
+          }
+        });
+      }
+
+      const searchTerm = (document.getElementById('playerSearch')?.value || '').toLowerCase();
+
       players.forEach((p, i) => {
+        // Search filter
+        if (searchTerm && !p.name.toLowerCase().includes(searchTerm)) return;
+
         const isLeader = i === 0;
         const posDisplay = p.pos.toString();
+        const delta = positionDeltas[p.id] || 0;
+        const deltaHtml = delta > 0 ? `<span class="pos-delta up">\u25B2${delta}</span>` : delta < 0 ? `<span class="pos-delta down">\u25BC${Math.abs(delta)}</span>` : '';
         const totalFormatted = padScore(formatScore(p.totalScore), 3);
         const todayFormatted = padScore(formatScore(p.todayScore), 3);
         const totalColor = scoreClass(p.totalScore);
@@ -1047,8 +1181,9 @@
           const oldTotalFormatted = oldTotal !== undefined ? padScore(formatScore(oldTotal), 3) : totalFormatted;
           const oldTodayFormatted = oldToday !== undefined ? padScore(formatScore(oldToday), 3) : todayFormatted;
 
-          existingRow.querySelector('.pos').textContent = posDisplay;
+          existingRow.querySelector('.pos').innerHTML = posDisplay + deltaHtml;
           existingRow.querySelector('.pos').className = `pos ${isLeader ? 'leader' : ''}`;
+          existingRow.onclick = () => showScorecard(p);
 
           if (oldTotalFormatted !== totalFormatted) {
             const totalContainer = existingRow.querySelector('.total-flap');
@@ -1086,8 +1221,9 @@
           const row = document.createElement('div');
           row.className = 'player-row';
           row.dataset.id = p.id;
+          row.onclick = () => showScorecard(p);
           row.innerHTML = `
-            <div class="pos ${isLeader ? 'leader' : ''}">${posDisplay}</div>
+            <div class="pos ${isLeader ? 'leader' : ''}">${posDisplay}${deltaHtml}</div>
             <div class="player-info">
               ${flagHtml}
               <span class="player-name"><span class="first">${p.firstName}</span> ${p.lastName}</span>
@@ -1113,6 +1249,21 @@
 
       lb.innerHTML = '';
       lb.appendChild(fragment);
+
+      // Insert cut line if round 3 or 4
+      if (currentRoundNum >= 3 && !searchTerm) {
+        const rows = lb.querySelectorAll('.player-row');
+        let cutInserted = false;
+        rows.forEach((row, idx) => {
+          if (!cutInserted && idx >= 65) {
+            const cutDiv = document.createElement('div');
+            cutDiv.className = 'cut-line-row';
+            cutDiv.innerHTML = '<span class="cut-line-label">- - - Projected Cut - - -</span>';
+            row.parentNode.insertBefore(cutDiv, row);
+            cutInserted = true;
+          }
+        });
+      }
     }
 
     function buildTicker(players, eventName) {
@@ -1160,7 +1311,12 @@
         document.getElementById('courseInfo').textContent =
           `${courseName ? courseName : 'Course TBD'} \u00b7 Par ${courseParVal}${courseYards ? ' \u00b7 ' + courseYards.toLocaleString() + ' yds' : ''}`;
         const roundNum = event.status?.period || '';
+        currentRoundNum = parseInt(roundNum) || 0;
         document.getElementById('roundInfo').textContent = roundNum ? `Round ${roundNum}` : '';
+
+        // Update odds section title dynamically
+        const oddsTitleEl = document.getElementById('oddsSectionTitle');
+        if (oddsTitleEl) oddsTitleEl.textContent = eventName;
 
         const totalRounds = 4;
         const roundProgress = roundNum ? ((roundNum - 1) / totalRounds) * 100 : 0;
@@ -1398,11 +1554,27 @@
 
     function renderParlays(book) {
       const container = document.getElementById('parlayCards');
-      const data = parlayData[book] || [];
-      container.innerHTML = data.map(p => {
+      let data = [...(parlayData[book] || [])];
+
+      // Sort by performance: parlays with more legs hitting appear first
+      const hasLive = Object.keys(livePlayerData).length > 0;
+      if (hasLive) {
+        data.sort((a, b) => {
+          const hittingA = a.legs.filter(l => {
+            const s = getParlayLegStatus(l.player, l.prop);
+            return s.cls === 'hitting';
+          }).length;
+          const hittingB = b.legs.filter(l => {
+            const s = getParlayLegStatus(l.player, l.prop);
+            return s.cls === 'hitting';
+          }).length;
+          return hittingB - hittingA;
+        });
+      }
+
+      container.innerHTML = data.map((p, pi) => {
         const legsHtml = p.legs.map(l => {
           const status = getParlayLegStatus(l.player, l.prop);
-          const hasLive = Object.keys(livePlayerData).length > 0;
           const liveTag = hasLive ? `<span class="parlay-leg-live ${status.cls}">${status.text}</span>` : '';
           return `
           <div class="parlay-leg">
@@ -1418,7 +1590,10 @@
           <div class="parlay-card ${p.hot ? 'hot' : ''}">
             <div class="parlay-header">
               <div class="parlay-label">${p.label}</div>
-              <div class="parlay-badge ${p.badgeClass}">${p.badge}</div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <button class="parlay-add-builder-btn" onclick="addSuggestedToBuilder(${pi}, '${book}')">+ Builder</button>
+                <div class="parlay-badge ${p.badgeClass}">${p.badge}</div>
+              </div>
             </div>
             <div class="parlay-legs">${legsHtml}</div>
             <div class="parlay-footer">
@@ -1534,7 +1709,8 @@
           combinedDecimal *= (l.odds / 100) + 1;
         });
         const combinedAmerican = Math.round((combinedDecimal - 1) * 100);
-        const payout = (10 * combinedDecimal).toFixed(2);
+        const betAmount = parseFloat(document.getElementById('builderBetAmount')?.value) || 10;
+        const payout = (betAmount * combinedDecimal).toFixed(2);
         const prob = (1 / combinedDecimal * 100).toFixed(1);
 
         document.getElementById('builderCombinedOdds').textContent = `+${combinedAmerican}`;
@@ -1557,7 +1733,8 @@
       let combinedDecimal = 1;
       builderLegs.forEach(l => { combinedDecimal *= (l.odds / 100) + 1; });
       const combinedAmerican = Math.round((combinedDecimal - 1) * 100);
-      const payout = (10 * combinedDecimal).toFixed(2);
+      const betAmount = parseFloat(document.getElementById('builderBetAmount')?.value) || 10;
+      const payout = (betAmount * combinedDecimal).toFixed(2);
 
       const parlay = {
         id: Date.now(),
@@ -1570,6 +1747,7 @@
         combinedOdds: `+${combinedAmerican}`,
         payout: `$${payout}`,
         book: currentBook === 'fanduel' ? 'FanDuel' : 'DraftKings',
+        betAmount: betAmount,
         createdAt: new Date().toLocaleDateString()
       };
 
@@ -1637,7 +1815,7 @@
             </div>
             <div class="parlay-legs">${legsHtml}</div>
             <div class="parlay-footer">
-              <div class="parlay-meta">${p.legs.length}-Leg · ${p.book} · $10 bet</div>
+              <div class="parlay-meta">${p.legs.length}-Leg · ${p.book} · $${p.betAmount || 10} bet</div>
               <div class="parlay-payout">
                 <span class="parlay-payout-label">Wins</span>
                 <span class="parlay-payout-value">${p.payout}</span>
@@ -1646,6 +1824,94 @@
           </div>
         `;
       }).join('');
+    }
+
+    // ==========================================
+    // SCORECARD MODAL
+    // ==========================================
+    function showScorecard(player) {
+      // Remove existing overlay if any
+      const existing = document.querySelector('.scorecard-overlay');
+      if (existing) existing.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'scorecard-overlay';
+      overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+
+      const roundsHtml = player.roundsData.map(r => {
+        if (r.score === '--' && r.holes.length === 0) return '';
+        return `<div class="scorecard-round">
+          <div class="scorecard-round-label">R${r.round}</div>
+          <div class="scorecard-round-score">${r.score}</div>
+        </div>`;
+      }).filter(Boolean).join('');
+
+      // Current round hole-by-hole
+      const currentRd = player.roundsData.filter(r => r.holes.length > 0).pop();
+      let holesHtml = '';
+      if (currentRd && currentRd.holes.length > 0) {
+        holesHtml = `<div class="scorecard-holes-title">Round ${currentRd.round} Hole-by-Hole</div>
+          <div class="scorecard-holes">${currentRd.holes.map((h, i) => {
+            const cls = getHoleDotClass(h.type);
+            return `<div class="scorecard-hole hole-dot ${cls}" title="Hole ${i+1}">${h.score}</div>`;
+          }).join('')}</div>`;
+      }
+
+      overlay.innerHTML = `<div class="scorecard-modal">
+        <button class="scorecard-close" onclick="this.closest('.scorecard-overlay').remove()">&times;</button>
+        <div class="scorecard-name">${player.name}</div>
+        <div class="scorecard-pos">Position: ${player.pos} &middot; Total: ${formatScore(player.totalScore)} &middot; Today: ${formatScore(player.todayScore)}</div>
+        <div class="scorecard-rounds">${roundsHtml || '<span style="color:#4a5a6a;font-size:12px;">No round data available</span>'}</div>
+        ${holesHtml}
+      </div>`;
+
+      document.body.appendChild(overlay);
+    }
+
+    // ==========================================
+    // SEARCH / FILTER
+    // ==========================================
+    function filterLeaderboard() {
+      const term = (document.getElementById('playerSearch')?.value || '').toLowerCase();
+      const rows = document.querySelectorAll('#leaderboard .player-row');
+      const cutLines = document.querySelectorAll('#leaderboard .cut-line-row');
+      cutLines.forEach(c => c.style.display = term ? 'none' : '');
+      rows.forEach(row => {
+        const name = row.querySelector('.player-name')?.textContent?.toLowerCase() || '';
+        row.style.display = name.includes(term) ? '' : 'none';
+      });
+    }
+
+    // ==========================================
+    // ADD SUGGESTED PARLAY TO BUILDER
+    // ==========================================
+    function addSuggestedToBuilder(index, book) {
+      const data = [...(parlayData[book] || [])];
+      // Re-sort same way as renderParlays to match index
+      const hasLive = Object.keys(livePlayerData).length > 0;
+      if (hasLive) {
+        data.sort((a, b) => {
+          const hA = a.legs.filter(l => getParlayLegStatus(l.player, l.prop).cls === 'hitting').length;
+          const hB = b.legs.filter(l => getParlayLegStatus(l.player, l.prop).cls === 'hitting').length;
+          return hB - hA;
+        });
+      }
+      const parlay = data[index];
+      if (!parlay) return;
+
+      const propMap = { 'Outright Win': 'win', 'Top 5': 'top5', 'Top 10': 'top10', 'Top 20': 'top20' };
+      builderLegs = [];
+      parlay.legs.forEach(l => {
+        const propKey = propMap[l.prop] || 'win';
+        const odds = getOddsForLeg(l.player, propKey);
+        if (odds !== null) {
+          builderLegs.push({ player: l.player, prop: propKey, odds });
+        }
+      });
+
+      renderBuilder();
+      switchBettingView('builder');
+      showToast('Parlay added to builder', 'info');
     }
 
     // Initialize
@@ -1679,6 +1945,13 @@
     setInterval(fetchLeaderboard, REFRESH_INTERVAL);
     setInterval(updateTime, 1000);
     updateTime();
+
+    // Refresh on tab focus (Page Visibility API)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        fetchLeaderboard();
+      }
+    });
   </script>
 </body>
 </html>
