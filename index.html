@@ -198,11 +198,11 @@
       display: flex; align-items: center; justify-content: center;
       font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
     }
-    .hole-dot.birdie { background: transparent; color: #4ade80; border: 2px solid #4ade80; border-radius: 50%; }
-    .hole-dot.eagle { background: transparent; color: #fbbf24; border: 2px solid #fbbf24; border-radius: 50%; box-shadow: 0 0 0 2px transparent, 0 0 0 4px #fbbf24; width: 24px; height: 24px; margin: 1px; }
-    .hole-dot.bogey { background: transparent; color: #a78bfa; border: 2px solid #a78bfa; border-radius: 2px; }
-    .hole-dot.double { background: transparent; color: #e11d48; border: 2px solid #e11d48; border-radius: 2px; box-shadow: 0 0 0 2px transparent, 0 0 0 4px #e11d48; width: 24px; height: 24px; margin: 1px; }
-    .hole-dot.par { background: transparent; color: #94a3b8; border: none; }
+    .hole-dot.birdie { background: #166534; color: #4ade80; border: none; border-radius: 50%; }
+    .hole-dot.eagle { background: #854d0e; color: #fbbf24; border: none; border-radius: 50%; }
+    .hole-dot.bogey { background: #3b1764; color: #c4b5fd; border: none; border-radius: 4px; }
+    .hole-dot.double { background: #7f1d1d; color: #fca5a5; border: none; border-radius: 4px; }
+    .hole-dot.par { background: rgba(148,163,184,0.08); color: #64748b; border: none; border-radius: 50%; }
 
     /* =============================================
        SPLIT-FLAP SCOREBOARD
@@ -737,14 +737,15 @@
     }
     .sc-table td { color: #94a3b8; }
     .sc-table td.total-cell { font-weight: 800; color: #e2e8f0; background: rgba(255,255,255,0.03); }
-    .sc-table td.birdie { color: #4ade80; }
-    .sc-table td.birdie span { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 2px solid #4ade80; border-radius: 50%; }
-    .sc-table td.eagle { color: #fbbf24; }
-    .sc-table td.eagle span { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 2px solid #fbbf24; border-radius: 50%; box-shadow: 0 0 0 2px transparent, 0 0 0 4px #fbbf24; }
-    .sc-table td.bogey { color: #a78bfa; }
-    .sc-table td.bogey span { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 2px solid #a78bfa; border-radius: 2px; }
-    .sc-table td.double { color: #e11d48; }
-    .sc-table td.double span { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 2px solid #e11d48; border-radius: 2px; box-shadow: 0 0 0 2px transparent, 0 0 0 4px #e11d48; }
+    .sc-table td.birdie span, .sc-table td.eagle span, .sc-table td.bogey span, .sc-table td.double span, .sc-table td.par span {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; font-size: 11px; font-weight: 700;
+    }
+    .sc-table td.birdie span { background: #166534; color: #4ade80; border-radius: 50%; }
+    .sc-table td.eagle span { background: #854d0e; color: #fbbf24; border-radius: 50%; }
+    .sc-table td.bogey span { background: #3b1764; color: #c4b5fd; border-radius: 4px; }
+    .sc-table td.double span { background: #7f1d1d; color: #fca5a5; border-radius: 4px; }
+    .sc-table td.par span { color: #94a3b8; }
     .sc-table td.par { color: #94a3b8; }
     .sc-table tr.par-row td { background: rgba(255,255,255,0.015); font-size: 10px; }
 
@@ -754,11 +755,11 @@
     }
     .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #4a5a6a; }
     .legend-dot { width: 12px; height: 12px; }
-    .legend-dot.eagle-dot { border-radius: 50%; border: 1.5px solid #fbbf24; box-shadow: 0 0 0 1px transparent, 0 0 0 3px #fbbf24; width: 10px; height: 10px; margin: 1px; }
-    .legend-dot.birdie-dot { border-radius: 50%; border: 2px solid #4ade80; }
-    .legend-dot.par-dot { border: none; background: #94a3b8; width: 6px; height: 6px; border-radius: 50%; margin: 3px; }
-    .legend-dot.bogey-dot { border-radius: 2px; border: 2px solid #a78bfa; }
-    .legend-dot.double-dot { border-radius: 2px; border: 1.5px solid #e11d48; box-shadow: 0 0 0 1px transparent, 0 0 0 3px #e11d48; width: 10px; height: 10px; margin: 1px; }
+    .legend-dot.eagle-dot { border-radius: 50%; background: #854d0e; }
+    .legend-dot.birdie-dot { border-radius: 50%; background: #166534; }
+    .legend-dot.par-dot { border-radius: 50%; background: rgba(148,163,184,0.15); }
+    .legend-dot.bogey-dot { border-radius: 3px; background: #3b1764; }
+    .legend-dot.double-dot { border-radius: 3px; background: #7f1d1d; }
 
     /* Search input */
     .search-input {
