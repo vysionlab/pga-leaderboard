@@ -722,28 +722,27 @@
       font-family: 'JetBrains Mono', monospace; font-size: 11px;
       background: #1a1f2e; padding: 2px 8px; border-radius: 4px; color: #e2e8f0;
     }
-    .scorecard-grid {
-      display: grid; gap: 0; margin-bottom: 12px;
-      border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; overflow: hidden;
+    .sc-table {
+      width: 100%; border-collapse: collapse; margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
+      overflow: hidden; font-family: 'JetBrains Mono', monospace;
     }
-    .scorecard-grid-row {
-      display: grid; grid-template-columns: 40px repeat(9, 1fr) 44px;
+    .sc-table th, .sc-table td {
+      padding: 5px 3px; text-align: center; font-size: 11px; font-weight: 600;
       border-bottom: 1px solid rgba(255,255,255,0.04);
     }
-    .scorecard-grid-row:last-child { border-bottom: none; }
-    .scorecard-grid-row.header-row { background: #1a1f2e; }
-    .scorecard-grid-row.par-row { background: rgba(255,255,255,0.02); }
-    .sc-cell {
-      padding: 5px 2px; text-align: center; font-size: 11px; font-weight: 600;
-      font-family: 'JetBrains Mono', monospace; color: #64748b;
+    .sc-table th {
+      background: #1a1f2e; font-family: 'Inter', sans-serif; font-size: 9px;
+      font-weight: 700; color: #4a5a6a; text-transform: uppercase; letter-spacing: 0.3px;
     }
-    .sc-cell.label { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; color: #4a5a6a; text-transform: uppercase; letter-spacing: 0.3px; }
-    .sc-cell.total-cell { font-weight: 800; color: #e2e8f0; background: rgba(255,255,255,0.02); }
-    .sc-cell.birdie { color: #4ade80; background: rgba(0,168,10,0.08); }
-    .sc-cell.eagle { color: #fbbf24; background: rgba(234,179,8,0.1); }
-    .sc-cell.bogey { color: #fb7185; background: rgba(225,29,72,0.06); }
-    .sc-cell.double { color: #e11d48; background: rgba(225,29,72,0.1); }
-    .sc-cell.par { color: #94a3b8; }
+    .sc-table td { color: #94a3b8; }
+    .sc-table td.total-cell { font-weight: 800; color: #e2e8f0; background: rgba(255,255,255,0.03); }
+    .sc-table td.birdie { color: #4ade80; background: rgba(0,168,10,0.08); }
+    .sc-table td.eagle { color: #fbbf24; background: rgba(234,179,8,0.1); }
+    .sc-table td.bogey { color: #fb7185; background: rgba(225,29,72,0.06); }
+    .sc-table td.double { color: #e11d48; background: rgba(225,29,72,0.1); }
+    .sc-table td.par { color: #94a3b8; }
+    .sc-table tr.par-row td { background: rgba(255,255,255,0.015); font-size: 10px; }
 
     .scorecard-legend {
       display: flex; gap: 12px; justify-content: center; margin-top: 10px;
@@ -1912,7 +1911,7 @@
         </div>`;
       }).join('');
 
-      // Build hole-by-hole grid for rounds with data
+      // Build hole-by-hole tables for rounds with data
       let gridsHtml = '';
       playedRounds.forEach(rd => {
         if (rd.holes.length === 0) return;
@@ -1922,23 +1921,20 @@
 
         function buildNine(nineHoles, startHole, label) {
           if (nineHoles.length === 0) return '';
-          const holeNums = nineHoles.map((_, i) => startHole + i);
           const totalStrokes = nineHoles.reduce((s, h) => s + (parseInt(h.score) || 0), 0);
 
-          const headerCells = `<div class="sc-cell label">${label}</div>` +
-            holeNums.map(n => `<div class="sc-cell label">${n}</div>`).join('') +
-            (nineHoles.length === 9 ? '<div class="sc-cell label">Tot</div>' : '');
+          const headerRow = `<tr><th>${label}</th>` +
+            nineHoles.map((_, i) => `<th>${startHole + i}</th>`).join('') +
+            `<th>Tot</th></tr>`;
 
-          // We don't have par data per hole from API, so show score type as context
-          const scoreCells = `<div class="sc-cell label">Score</div>` +
+          const scoreRow = `<tr><td>Score</td>` +
             nineHoles.map(h => {
               const cls = getHoleDotClass(h.type);
-              return `<div class="sc-cell ${cls}">${h.score}</div>`;
+              return `<td class="${cls}">${h.score}</td>`;
             }).join('') +
-            (nineHoles.length === 9 ? `<div class="sc-cell total-cell">${totalStrokes}</div>` : '');
+            `<td class="total-cell">${totalStrokes}</td></tr>`;
 
-          // Relative to par row
-          const relCells = `<div class="sc-cell label">+/-</div>` +
+          const relRow = `<tr class="par-row"><td>+/-</td>` +
             nineHoles.map(h => {
               const v = parseInt(h.type);
               const cls = getHoleDotClass(h.type);
@@ -1948,17 +1944,11 @@
                 else if (v > 0) display = '+' + v;
                 else display = '' + v;
               }
-              return `<div class="sc-cell ${cls}">${display}</div>`;
+              return `<td class="${cls}">${display}</td>`;
             }).join('') +
-            '<div class="sc-cell"></div>';
+            `<td></td></tr>`;
 
-          // Pad grid to always 9 holes + label + total
-          const cols = nineHoles.length + 2;
-          return `<div class="scorecard-grid" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">
-            <div class="scorecard-grid-row header-row" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">${headerCells}</div>
-            <div class="scorecard-grid-row" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">${scoreCells}</div>
-            <div class="scorecard-grid-row par-row" style="grid-template-columns: 40px repeat(${nineHoles.length}, 1fr) 44px;">${relCells}</div>
-          </div>`;
+          return `<table class="sc-table">${headerRow}${scoreRow}${relRow}</table>`;
         }
 
         const roundScore = rd.score !== '--' ? formatScore(rd.score).trim() : '';
