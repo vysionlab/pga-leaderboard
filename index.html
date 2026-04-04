@@ -811,6 +811,118 @@
 
     /* Player row clickable */
     .player-row { cursor: pointer; }
+
+    /* =============================================
+       BETTING INTELLIGENCE FEATURES
+       ============================================= */
+
+    /* Feature 1: Performance Index badge */
+    .perf-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; border-radius: 50%; font-size: 8px; font-weight: 800;
+      font-family: 'JetBrains Mono', monospace; flex-shrink: 0; margin-left: 2px;
+    }
+    .perf-badge.perf-hot { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .perf-badge.perf-warm { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .perf-badge.perf-neutral { background: rgba(148,163,184,0.1); color: #64748b; }
+    .perf-badge.perf-cold { background: rgba(59,130,246,0.15); color: #3b82f6; }
+
+    /* Feature 2: Performance section in scorecard */
+    .perf-section { margin-bottom: 18px; }
+    .perf-section-title {
+      font-size: 11px; font-weight: 700; color: #a78bfa; text-transform: uppercase;
+      letter-spacing: 0.8px; margin-bottom: 8px;
+    }
+    .perf-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 8px;
+    }
+    .perf-stat {
+      background: #1a1f2e; border-radius: 8px; padding: 8px 10px; text-align: center;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .perf-stat-label { font-size: 9px; color: #4a5a6a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .perf-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #e2e8f0; margin-top: 2px; }
+    .perf-stat-value.good { color: #4ade80; }
+    .perf-stat-value.bad { color: #ef4444; }
+
+    /* Trend indicator */
+    .trend-bar {
+      display: flex; gap: 4px; align-items: flex-end; justify-content: center; height: 30px; margin-top: 6px;
+    }
+    .trend-bar-item {
+      width: 20px; border-radius: 2px 2px 0 0; min-height: 4px; transition: height 0.3s;
+    }
+    .trend-bar-item.good { background: #4ade80; }
+    .trend-bar-item.bad { background: #ef4444; }
+    .trend-bar-item.neutral { background: #64748b; }
+
+    /* Feature 3: Form indicator */
+    .form-indicator {
+      font-size: 12px; flex-shrink: 0; margin-left: 2px; line-height: 1;
+    }
+
+    /* Feature 4: Value Finder */
+    .intel-section {
+      padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .intel-section-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .intel-section-title.value-title { color: #4ade80; }
+    .intel-section-title.hot-title { color: #f97316; }
+    .intel-section-title.fade-title { color: #ef4444; }
+    .intel-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 0; font-size: 11px;
+    }
+    .intel-row-left { display: flex; align-items: center; gap: 6px; }
+    .intel-player { font-weight: 600; color: #e2e8f0; }
+    .intel-detail { font-size: 10px; color: #64748b; font-family: 'JetBrains Mono', monospace; }
+    .intel-badge {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.8px; padding: 2px 6px;
+      border-radius: 3px; text-transform: uppercase;
+    }
+    .intel-badge.value { background: rgba(74,222,128,0.15); color: #4ade80; }
+    .intel-badge.hot { background: rgba(249,115,22,0.15); color: #f97316; }
+    .intel-badge.fade { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .intel-badge.ev-pos { background: rgba(74,222,128,0.12); color: #4ade80; font-size: 8px; }
+    .intel-badge.ev-neg { background: rgba(239,68,68,0.1); color: #ef4444; font-size: 8px; }
+
+    /* Feature 5: Correlation warning */
+    .correlation-warning {
+      background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2);
+      border-radius: 8px; padding: 10px 12px; margin-top: 8px;
+      font-size: 11px; color: #fbbf24;
+    }
+    .correlation-warning-title {
+      font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 4px; display: flex; align-items: center; gap: 4px;
+    }
+    .correlation-warning-detail { color: #94a3b8; font-size: 10px; margin-top: 2px; }
+
+    /* Feature 7: Hedge calculator */
+    .hedge-section {
+      background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
+      border-radius: 8px; padding: 10px 12px; margin-top: 8px;
+    }
+    .hedge-btn {
+      background: rgba(139,92,246,0.2); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3);
+      border-radius: 5px; padding: 4px 10px; font-size: 10px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.3px;
+    }
+    .hedge-btn:hover { background: rgba(139,92,246,0.3); }
+    .hedge-result {
+      font-size: 11px; color: #e2e8f0; margin-top: 6px; line-height: 1.5;
+    }
+    .hedge-result .hedge-amount { color: #a78bfa; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .hedge-result .hedge-profit { color: #4ade80; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+    /* Feature 8: Momentum tracker */
+    .momentum-icon {
+      font-size: 11px; flex-shrink: 0; margin-left: 1px; line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -934,6 +1046,7 @@
                 <button class="builder-add-btn" onclick="addBuilderLeg()">Add</button>
               </div>
               <div id="builderLegs" class="builder-legs"></div>
+              <div id="builderCorrelation"></div>
               <div class="builder-summary" id="builderSummary" style="display:none;">
                 <div class="builder-summary-row">
                   <span class="builder-summary-label">Combined Odds</span>
@@ -980,6 +1093,172 @@
     let allPlayersData = []; // full player array for scorecard access
     let positionDeltas = {}; // id -> delta number
     let currentRoundNum = 0; // current tournament round
+
+    // ==========================================
+    // BETTING INTELLIGENCE: ANALYTICS ENGINE
+    // ==========================================
+    let playerAnalytics = {}; // id -> { perfIndex, form, momentum, birdieRate, bogeyRate, ... }
+
+    function computePlayerAnalytics(players) {
+      playerAnalytics = {};
+      players.forEach((p, idx) => {
+        const analytics = {
+          perfIndex: null,
+          form: 'neutral', // hot, cold, neutral
+          momentum: 'neutral', // hot, cold, neutral
+          momentumDetail: { birdies: 0, bogeys: 0, last6: [] },
+          birdieRate: 0,
+          bogeyRate: 0,
+          eagleRate: 0,
+          parRate: 0,
+          totalHolesPlayed: 0,
+          roundTrend: 'stable', // improving, declining, stable
+          bestRound: null,
+          worstRound: null,
+          roundScores: [],
+          avgScorePerHole: 0,
+          leaderboardPos: parseInt(String(p.pos).replace('T', '')) || 999,
+        };
+
+        // Collect all hole data across rounds
+        let allHoles = [];
+        let roundScoresNum = [];
+        const playedRounds = p.roundsData.filter(r => r.score !== '--' || r.holes.length > 0);
+
+        playedRounds.forEach(rd => {
+          rd.holes.forEach(h => {
+            const type = parseInt(h.type);
+            if (!isNaN(type)) allHoles.push(type);
+          });
+          const rs = parseInt(rd.score);
+          if (!isNaN(rs)) roundScoresNum.push({ round: rd.round, score: rs });
+        });
+
+        analytics.totalHolesPlayed = allHoles.length;
+
+        if (allHoles.length > 0) {
+          // Performance Index: average score relative to par per hole
+          const sum = allHoles.reduce((a, b) => a + b, 0);
+          analytics.avgScorePerHole = sum / allHoles.length;
+          analytics.perfIndex = analytics.avgScorePerHole;
+
+          // Scoring rates
+          const eagles = allHoles.filter(v => v <= -2).length;
+          const birdies = allHoles.filter(v => v === -1).length;
+          const pars = allHoles.filter(v => v === 0).length;
+          const bogeys = allHoles.filter(v => v === 1).length;
+          const doubles = allHoles.filter(v => v >= 2).length;
+
+          analytics.eagleRate = eagles / allHoles.length;
+          analytics.birdieRate = birdies / allHoles.length;
+          analytics.parRate = pars / allHoles.length;
+          analytics.bogeyRate = (bogeys + doubles) / allHoles.length;
+        }
+
+        // Round scores for trend
+        analytics.roundScores = roundScoresNum;
+        if (roundScoresNum.length >= 2) {
+          const last = roundScoresNum[roundScoresNum.length - 1].score;
+          const prev = roundScoresNum[roundScoresNum.length - 2].score;
+          if (last < prev) analytics.roundTrend = 'improving';
+          else if (last > prev) analytics.roundTrend = 'declining';
+          else analytics.roundTrend = 'stable';
+        }
+        if (roundScoresNum.length > 0) {
+          analytics.bestRound = roundScoresNum.reduce((a, b) => a.score < b.score ? a : b);
+          analytics.worstRound = roundScoresNum.reduce((a, b) => a.score > b.score ? a : b);
+        }
+
+        // Form: based on last round performance and trend
+        if (roundScoresNum.length > 0) {
+          const lastRound = roundScoresNum[roundScoresNum.length - 1].score;
+          if (lastRound <= -3 || analytics.roundTrend === 'improving') {
+            analytics.form = 'hot';
+          } else if (lastRound > 0 || analytics.roundTrend === 'declining') {
+            analytics.form = 'cold';
+          }
+        }
+
+        // Momentum: last 6 holes of current round
+        const lastPlayedRound = playedRounds[playedRounds.length - 1];
+        if (lastPlayedRound && lastPlayedRound.holes.length > 0) {
+          const recentHoles = lastPlayedRound.holes.slice(-6);
+          let momBirdies = 0, momBogeys = 0;
+          const last6 = [];
+          recentHoles.forEach(h => {
+            const t = parseInt(h.type);
+            if (!isNaN(t)) {
+              last6.push(t);
+              if (t <= -1) momBirdies++;
+              if (t >= 1) momBogeys++;
+            }
+          });
+          analytics.momentumDetail = { birdies: momBirdies, bogeys: momBogeys, last6 };
+          if (momBirdies >= 3) analytics.momentum = 'hot';
+          else if (momBogeys >= 3) analytics.momentum = 'cold';
+        }
+
+        playerAnalytics[p.id] = analytics;
+      });
+    }
+
+    // Simplified position -> win probability model
+    function positionToWinProb(pos) {
+      // Rough model: leader ~25%, 2nd ~15%, 3rd ~10%, etc.
+      if (pos <= 1) return 0.25;
+      if (pos <= 2) return 0.15;
+      if (pos <= 3) return 0.10;
+      if (pos <= 5) return 0.06;
+      if (pos <= 10) return 0.025;
+      if (pos <= 20) return 0.01;
+      if (pos <= 30) return 0.005;
+      return 0.002;
+    }
+
+    function positionToTop5Prob(pos) {
+      if (pos <= 5) return 0.75;
+      if (pos <= 10) return 0.35;
+      if (pos <= 15) return 0.15;
+      if (pos <= 20) return 0.08;
+      if (pos <= 30) return 0.03;
+      return 0.01;
+    }
+
+    function positionToTop10Prob(pos) {
+      if (pos <= 5) return 0.90;
+      if (pos <= 10) return 0.60;
+      if (pos <= 15) return 0.30;
+      if (pos <= 20) return 0.15;
+      if (pos <= 30) return 0.06;
+      return 0.02;
+    }
+
+    function positionToTop20Prob(pos) {
+      if (pos <= 10) return 0.95;
+      if (pos <= 20) return 0.65;
+      if (pos <= 30) return 0.30;
+      if (pos <= 40) return 0.15;
+      return 0.05;
+    }
+
+    function computeEV(oddsStr, playerName, prop) {
+      const live = getLiveInfo(playerName);
+      if (!live) return null;
+      const pos = parseInt(live.pos.replace('T', '')) || 999;
+      const oddsNum = parseInt(oddsStr.replace('+', ''));
+      if (isNaN(oddsNum) || oddsNum <= 0) return null;
+
+      const impliedProb = 100 / (oddsNum + 100);
+      let actualProb;
+      if (prop === 'win') actualProb = positionToWinProb(pos);
+      else if (prop === 'top5') actualProb = positionToTop5Prob(pos);
+      else if (prop === 'top10') actualProb = positionToTop10Prob(pos);
+      else if (prop === 'top20') actualProb = positionToTop20Prob(pos);
+      else actualProb = positionToWinProb(pos);
+
+      const ev = actualProb - impliedProb;
+      return { ev, actualProb, impliedProb, positive: ev > 0.02 };
+    }
 
     // ==========================================
     // SPLIT-FLAP HELPER
@@ -1231,6 +1510,31 @@
           ? `<img class="player-flag" src="${p.flagUrl}" alt="${p.countryCode}" onerror="this.style.display='none'">`
           : `<span class="player-flag-emoji">\u26f3</span>`;
 
+        // Betting intelligence badges
+        const pa = playerAnalytics[p.id];
+        let formHtml = '';
+        let momentumHtml = '';
+        let perfBadgeHtml = '';
+        if (pa) {
+          // Form indicator (Feature 3)
+          if (pa.form === 'hot') formHtml = '<span class="form-indicator" title="Hot form">&#x1F525;</span>';
+          else if (pa.form === 'cold') formHtml = '<span class="form-indicator" title="Cold form">&#x1F9CA;</span>';
+
+          // Momentum (Feature 8)
+          if (pa.momentum === 'hot') momentumHtml = '<span class="momentum-icon" title="Hot momentum: ' + pa.momentumDetail.birdies + ' birdies in last 6">&#x26A1;</span>';
+          else if (pa.momentum === 'cold') momentumHtml = '<span class="momentum-icon" title="Cold: ' + pa.momentumDetail.bogeys + ' bogeys in last 6">&#x1F4C9;</span>';
+
+          // Performance Index badge (Feature 1)
+          if (pa.perfIndex !== null) {
+            const pi = pa.perfIndex;
+            let perfClass = 'perf-neutral';
+            if (pi <= -0.15) perfClass = 'perf-hot';
+            else if (pi <= -0.05) perfClass = 'perf-warm';
+            else if (pi >= 0.10) perfClass = 'perf-cold';
+            perfBadgeHtml = `<span class="perf-badge ${perfClass}" title="Avg ${pi >= 0 ? '+' : ''}${pi.toFixed(2)} per hole">${pi >= 0 ? '+' : ''}${pi.toFixed(1)}</span>`;
+          }
+        }
+
         let last3Html = p.last3.map(h => {
           const cls = getHoleDotClass(h.type);
           return `<div class="hole-dot ${cls}">${h.score}</div>`;
@@ -1247,6 +1551,15 @@
           existingRow.querySelector('.pos').innerHTML = posDisplay + deltaHtml;
           existingRow.querySelector('.pos').className = `pos ${isLeader ? 'leader' : ''}`;
           existingRow.onclick = () => showScorecard(p);
+
+          // Update intelligence indicators
+          const playerInfoEl = existingRow.querySelector('.player-info');
+          // Remove old indicators
+          playerInfoEl.querySelectorAll('.form-indicator, .momentum-icon, .perf-badge').forEach(el => el.remove());
+          // Add fresh ones
+          if (formHtml) playerInfoEl.insertAdjacentHTML('beforeend', formHtml);
+          if (momentumHtml) playerInfoEl.insertAdjacentHTML('beforeend', momentumHtml);
+          if (perfBadgeHtml) playerInfoEl.insertAdjacentHTML('beforeend', perfBadgeHtml);
 
           if (oldTotalFormatted !== totalFormatted) {
             const totalContainer = existingRow.querySelector('.total-flap');
@@ -1290,6 +1603,7 @@
             <div class="player-info">
               ${flagHtml}
               <span class="player-name"><span class="first">${p.firstName}</span> ${p.lastName}</span>
+              ${formHtml}${momentumHtml}${perfBadgeHtml}
             </div>
             <div class="total-flap flap-container">${totalFormatted.split('').map(c => createFlapCell(c, totalColor)).join('')}</div>
             <div class="today-flap flap-container">${todayFormatted.split('').map(c => createFlapCell(c, todayColor)).join('')}</div>
@@ -1390,6 +1704,7 @@
         const totalProgress = status === 'post' ? 100 : Math.min(roundProgress + (holeProgress / totalRounds), 99);
         document.getElementById('progressBar').style.width = totalProgress + '%';
 
+        computePlayerAnalytics(players);
         renderLeaderboard(players);
         buildTicker(players, eventName);
 
@@ -1585,7 +1900,86 @@
     function renderOdds(book) {
       const list = document.getElementById('oddsList');
       const data = oddsData[book] || [];
-      list.innerHTML = data.map((d, i) => {
+      const hasLive = Object.keys(livePlayerData).length > 0;
+
+      // Build intelligence sections (Features 4, 8, 9)
+      let intelHtml = '';
+
+      if (hasLive) {
+        // Feature 4: Value Finder - players performing better than odds suggest
+        const valuePicks = [];
+        data.forEach((d, i) => {
+          const live = getLiveInfo(d.player);
+          if (!live) return;
+          const livePos = parseInt(live.pos.replace('T', '')) || 999;
+          const oddsRank = i + 1;
+          // Value = performing much better than odds rank
+          if (livePos <= oddsRank - 5 && livePos <= 20) {
+            valuePicks.push({ player: d.player, oddsRank, livePos, diff: oddsRank - livePos, score: live.score });
+          }
+        });
+        valuePicks.sort((a, b) => b.diff - a.diff);
+
+        if (valuePicks.length > 0) {
+          intelHtml += `<div class="intel-section">
+            <div class="intel-section-title value-title">&#x1F4B0; Value Picks</div>
+            ${valuePicks.slice(0, 4).map(v => `<div class="intel-row">
+              <div class="intel-row-left">
+                <span class="intel-player">${v.player}</span>
+                <span class="intel-detail">Odds #${v.oddsRank} | Live ${v.livePos}${v.livePos <= 5 ? ' (' + v.score + ')' : ''}</span>
+              </div>
+              <span class="intel-badge value">VALUE +${v.diff}</span>
+            </div>`).join('')}
+          </div>`;
+        }
+
+        // Feature 8: Hot Now - momentum tracker section
+        const hotNow = [];
+        allPlayersData.forEach(p => {
+          const pa = playerAnalytics[p.id];
+          if (pa && pa.momentum === 'hot') {
+            hotNow.push({ player: p.name, pos: p.pos, birdies: pa.momentumDetail.birdies, score: formatScore(p.totalScore) });
+          }
+        });
+
+        if (hotNow.length > 0) {
+          intelHtml += `<div class="intel-section">
+            <div class="intel-section-title hot-title">&#x26A1; Hot Now</div>
+            ${hotNow.slice(0, 4).map(h => `<div class="intel-row">
+              <div class="intel-row-left">
+                <span class="intel-player">${h.player}</span>
+                <span class="intel-detail">${h.pos} (${h.score})</span>
+              </div>
+              <span class="intel-badge hot">${h.birdies} birdies in 6</span>
+            </div>`).join('')}
+          </div>`;
+        }
+
+        // Feature 9: Fade Alerts
+        const fadeAlerts = [];
+        allPlayersData.forEach(p => {
+          const pa = playerAnalytics[p.id];
+          if (pa && pa.momentum === 'cold') {
+            fadeAlerts.push({ player: p.name, pos: p.pos, bogeys: pa.momentumDetail.bogeys, score: formatScore(p.totalScore) });
+          }
+        });
+
+        if (fadeAlerts.length > 0) {
+          intelHtml += `<div class="intel-section">
+            <div class="intel-section-title fade-title">&#x1F6A8; Fade Alerts</div>
+            ${fadeAlerts.slice(0, 4).map(f => `<div class="intel-row">
+              <div class="intel-row-left">
+                <span class="intel-player">${f.player}</span>
+                <span class="intel-detail">${f.pos} (${f.score})</span>
+              </div>
+              <span class="intel-badge fade">FADE ${f.bogeys} bogeys</span>
+            </div>`).join('')}
+          </div>`;
+        }
+      }
+
+      // Render odds rows with EV badges (Feature 6)
+      const rowsHtml = data.map((d, i) => {
         const isLongshot = parseInt(d.odds.replace('+', '')) >= 5000;
         const live = getLiveInfo(d.player);
         let liveHtml = '<div class="odds-live">--</div>';
@@ -1594,14 +1988,25 @@
           const cls = posNum === 1 ? 'leader' : posNum <= 5 ? 'top5' : posNum <= 10 ? 'top10' : '';
           liveHtml = `<div class="odds-live ${cls}">${live.pos} (${live.score})</div>`;
         }
+        // EV badge
+        let evHtml = '';
+        if (hasLive) {
+          const evData = computeEV(d.odds, d.player, 'win');
+          if (evData) {
+            if (evData.positive) evHtml = ' <span class="intel-badge ev-pos">+EV</span>';
+            else if (evData.ev < -0.02) evHtml = ' <span class="intel-badge ev-neg">-EV</span>';
+          }
+        }
         return `<div class="odds-row">
           <div class="odds-rank ${i === 0 ? 'top' : ''}">${i + 1}</div>
-          <div class="odds-player">${d.player}</div>
+          <div class="odds-player">${d.player}${evHtml}</div>
           ${liveHtml}
           <div class="odds-value ${isLongshot ? 'longshot' : ''}">${d.odds}</div>
           <div class="odds-implied">${impliedProb(d.odds)}</div>
         </div>`;
       }).join('');
+
+      list.innerHTML = intelHtml + rowsHtml;
     }
 
     function getParlayLegStatus(player, prop) {
@@ -1639,10 +2044,21 @@
         const legsHtml = p.legs.map(l => {
           const status = getParlayLegStatus(l.player, l.prop);
           const liveTag = hasLive ? `<span class="parlay-leg-live ${status.cls}">${status.text}</span>` : '';
+          // EV badge on parlay legs (Feature 6)
+          let evHtml = '';
+          if (hasLive) {
+            const propMap = { 'Outright Win': 'win', 'Top 5': 'top5', 'Top 10': 'top10', 'Top 20': 'top20' };
+            const propKey = propMap[l.prop] || 'win';
+            const evData = computeEV(l.odds, l.player, propKey);
+            if (evData) {
+              if (evData.positive) evHtml = ' <span class="intel-badge ev-pos">+EV</span>';
+              else if (evData.ev < -0.02) evHtml = ' <span class="intel-badge ev-neg">-EV</span>';
+            }
+          }
           return `
           <div class="parlay-leg">
             <div class="parlay-leg-left">
-              <span class="parlay-leg-player">${l.player}</span>
+              <span class="parlay-leg-player">${l.player}${evHtml}</span>
               <span class="parlay-leg-prop">${l.prop}</span>
             </div>
             ${liveTag}
@@ -1750,20 +2166,65 @@
       const container = document.getElementById('builderLegs');
       const summary = document.getElementById('builderSummary');
       const propLabels = { win: 'Outright Win', top5: 'Top 5', top10: 'Top 10', top20: 'Top 20' };
+      const hasLive = Object.keys(livePlayerData).length > 0;
 
       container.innerHTML = builderLegs.map((l, i) => {
         const live = getLiveInfo(l.player);
         const liveTag = live ? `<span class="parlay-leg-live" style="margin-left:4px;">${live.pos}</span>` : '';
+        // EV badge per leg (Feature 6)
+        let evHtml = '';
+        if (hasLive) {
+          const evData = computeEV('+' + l.odds, l.player, l.prop);
+          if (evData) {
+            if (evData.positive) evHtml = ' <span class="intel-badge ev-pos">+EV</span>';
+            else if (evData.ev < -0.02) evHtml = ' <span class="intel-badge ev-neg">-EV</span>';
+          }
+        }
         return `<div class="builder-leg">
           <div class="builder-leg-info">
             <span class="builder-leg-name">${l.player}</span>
             <span class="builder-leg-prop">${propLabels[l.prop]}</span>
-            ${liveTag}
+            ${liveTag}${evHtml}
           </div>
           <span class="builder-leg-odds">+${l.odds}</span>
           <button class="builder-leg-remove" onclick="removeBuilderLeg(${i})">✕</button>
         </div>`;
       }).join('');
+
+      // Feature 5: Correlation Engine - check for correlated legs
+      const corrContainer = document.getElementById('builderCorrelation');
+      if (corrContainer) {
+        corrContainer.innerHTML = '';
+        if (builderLegs.length >= 2 && hasLive) {
+          const correlations = [];
+          for (let i = 0; i < builderLegs.length; i++) {
+            for (let j = i + 1; j < builderLegs.length; j++) {
+              const liveA = getLiveInfo(builderLegs[i].player);
+              const liveB = getLiveInfo(builderLegs[j].player);
+              if (liveA && liveB) {
+                const posA = parseInt(liveA.pos.replace('T', '')) || 999;
+                const posB = parseInt(liveB.pos.replace('T', '')) || 999;
+                if (Math.abs(posA - posB) <= 5) {
+                  correlations.push({
+                    playerA: builderLegs[i].player.split(' ').pop(),
+                    playerB: builderLegs[j].player.split(' ').pop(),
+                    posA, posB
+                  });
+                }
+              }
+            }
+          }
+          if (correlations.length > 0) {
+            corrContainer.innerHTML = `
+              <div class="correlation-warning">
+                <div class="correlation-warning-title">&#x26A0;&#xFE0F; Correlation Warning</div>
+                ${correlations.map(c => `<div>${c.playerA} (${c.posA}) and ${c.playerB} (${c.posB}) are within 5 positions</div>`).join('')}
+                <div class="correlation-warning-detail">Parlays with players spread across the leaderboard tend to have more independent outcomes.</div>
+              </div>
+            `;
+          }
+        }
+      }
 
       if (builderLegs.length > 0) {
         // Calculate combined decimal odds
@@ -1869,6 +2330,34 @@
           else statusBadge = `<div class="parlay-badge longshot">0/${p.legs.length} HITTING</div>`;
         }
 
+        // Feature 7: Hedge Calculator
+        let hedgeHtml = '';
+        if (hasLive) {
+          const hitting = p.legs.filter(l => {
+            const live = getLiveInfo(l.player);
+            if (!live) return false;
+            const posNum = parseInt(live.pos.replace('T', '')) || 999;
+            const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
+            return posNum <= target;
+          });
+          const missing = p.legs.filter(l => {
+            const live = getLiveInfo(l.player);
+            if (!live) return true;
+            const posNum = parseInt(live.pos.replace('T', '')) || 999;
+            const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
+            return posNum > target;
+          });
+          // Show hedge when some legs are hitting and some aren't
+          if (hitting.length > 0 && missing.length > 0 && hitting.length >= p.legs.length / 2) {
+            const betAmount = p.betAmount || 10;
+            const payoutNum = parseFloat(p.payout.replace(/[$,]/g, '')) || 0;
+            hedgeHtml = `<div class="hedge-section" id="hedge-${p.id}">
+              <button class="hedge-btn" onclick="calculateHedge(${p.id}, ${betAmount}, ${payoutNum})">&#x1F6E1; Calculate Hedge</button>
+              <div id="hedge-result-${p.id}"></div>
+            </div>`;
+          }
+        }
+
         return `
           <div class="parlay-card" style="border-color: rgba(74,222,128,0.2);">
             <div class="parlay-header">
@@ -1884,9 +2373,64 @@
                 <span class="parlay-payout-value">${p.payout}</span>
               </div>
             </div>
+            ${hedgeHtml}
           </div>
         `;
       }).join('');
+    }
+
+    // ==========================================
+    // HEDGE CALCULATOR (Feature 7)
+    // ==========================================
+    function calculateHedge(parlayId, betAmount, potentialPayout) {
+      const resultEl = document.getElementById(`hedge-result-${parlayId}`);
+      if (!resultEl) return;
+
+      const parlay = savedParlays.find(p => p.id === parlayId);
+      if (!parlay) return;
+
+      // Find the missing legs and estimate hedge probability
+      const missing = parlay.legs.filter(l => {
+        const live = getLiveInfo(l.player);
+        if (!live) return true;
+        const posNum = parseInt(live.pos.replace('T', '')) || 999;
+        const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
+        return posNum > target;
+      });
+
+      if (missing.length === 0) {
+        resultEl.innerHTML = '<div class="hedge-result">All legs hitting - no hedge needed!</div>';
+        return;
+      }
+
+      // Estimate the probability of remaining legs hitting
+      let remainingProb = 1;
+      missing.forEach(l => {
+        const live = getLiveInfo(l.player);
+        const pos = live ? parseInt(live.pos.replace('T', '')) || 999 : 999;
+        let prob;
+        if (l.prop === 'Outright Win') prob = positionToWinProb(pos);
+        else if (l.prop === 'Top 5') prob = positionToTop5Prob(pos);
+        else if (l.prop === 'Top 10') prob = positionToTop10Prob(pos);
+        else if (l.prop === 'Top 20') prob = positionToTop20Prob(pos);
+        else prob = 0.1;
+        remainingProb *= prob;
+      });
+
+      // Hedge formula: hedge_amount = (potential_payout * hedge_prob) / (1 + hedge_prob)
+      // hedge_prob = probability of needing the hedge (1 - remainingProb)
+      const hedgeProb = 1 - remainingProb;
+      const hedgeAmount = (potentialPayout * hedgeProb) / (1 + hedgeProb);
+      const guaranteedProfit = potentialPayout - hedgeAmount - betAmount;
+      const hedgeWinProfit = hedgeAmount * (1 / hedgeProb) - betAmount;
+
+      const missingNames = missing.map(l => l.player.split(' ').pop()).join(', ');
+
+      resultEl.innerHTML = `<div class="hedge-result">
+        Bet <span class="hedge-amount">$${hedgeAmount.toFixed(2)}</span> against ${missingNames} finishing ${missing.map(l => l.prop).join('/')}<br>
+        If parlay hits: profit <span class="hedge-profit">$${(potentialPayout - hedgeAmount - betAmount).toFixed(2)}</span><br>
+        If hedge wins: recover <span class="hedge-profit">$${(hedgeAmount / hedgeProb - betAmount).toFixed(2)}</span>
+      </div>`;
     }
 
     // ==========================================
@@ -1968,6 +2512,97 @@
       const totalColor = scoreClass(player.totalScore);
       const todayColor = scoreClass(player.todayScore);
 
+      // Build Performance & Analytics section (Features 1 & 2)
+      const pa = playerAnalytics[player.id];
+      let perfSectionHtml = '';
+      if (pa && pa.totalHolesPlayed > 0) {
+        // Performance Index section (Feature 1)
+        const piVal = pa.perfIndex;
+        const piColor = piVal <= -0.05 ? 'good' : piVal >= 0.05 ? 'bad' : '';
+        const birdiePercent = (pa.birdieRate * 100).toFixed(1);
+        const bogeyPercent = (pa.bogeyRate * 100).toFixed(1);
+        const eaglePercent = (pa.eagleRate * 100).toFixed(1);
+        const parPercent = (pa.parRate * 100).toFixed(1);
+
+        // Round trend visualization (Feature 2)
+        let trendHtml = '';
+        if (pa.roundScores.length > 0) {
+          const trendIcon = pa.roundTrend === 'improving' ? '&#x2197;&#xFE0F;' : pa.roundTrend === 'declining' ? '&#x2198;&#xFE0F;' : '&#x27A1;&#xFE0F;';
+          const trendLabel = pa.roundTrend.charAt(0).toUpperCase() + pa.roundTrend.slice(1);
+          const maxAbs = Math.max(...pa.roundScores.map(r => Math.abs(r.score)), 1);
+          trendHtml = `
+            <div class="perf-stat" style="grid-column: span 2;">
+              <div class="perf-stat-label">Round Trend ${trendIcon}</div>
+              <div class="perf-stat-value" style="font-size:11px; color: ${pa.roundTrend === 'improving' ? '#4ade80' : pa.roundTrend === 'declining' ? '#ef4444' : '#94a3b8'};">
+                ${trendLabel}
+              </div>
+              <div class="trend-bar">
+                ${pa.roundScores.map(r => {
+                  const height = Math.max(4, (Math.abs(r.score) / maxAbs) * 28);
+                  const cls = r.score < 0 ? 'good' : r.score > 0 ? 'bad' : 'neutral';
+                  return `<div class="trend-bar-item ${cls}" style="height:${height}px;" title="R${r.round}: ${r.score > 0 ? '+' : ''}${r.score}"></div>`;
+                }).join('')}
+              </div>
+            </div>`;
+        }
+
+        // Best/worst round (Feature 2)
+        let bestWorstHtml = '';
+        if (pa.bestRound && pa.worstRound && pa.roundScores.length > 1) {
+          bestWorstHtml = `
+            <div class="perf-stat">
+              <div class="perf-stat-label">Best Round</div>
+              <div class="perf-stat-value good">R${pa.bestRound.round} (${pa.bestRound.score > 0 ? '+' : ''}${pa.bestRound.score})</div>
+            </div>
+            <div class="perf-stat">
+              <div class="perf-stat-label">Worst Round</div>
+              <div class="perf-stat-value bad">R${pa.worstRound.round} (${pa.worstRound.score > 0 ? '+' : ''}${pa.worstRound.score})</div>
+            </div>`;
+        }
+
+        // Momentum section (Feature 8 in scorecard)
+        let momentumHtml = '';
+        if (pa.momentumDetail.last6.length > 0) {
+          const momLabel = pa.momentum === 'hot' ? '<span style="color:#f97316;">HOT</span>' : pa.momentum === 'cold' ? '<span style="color:#3b82f6;">COLD</span>' : '<span style="color:#64748b;">STEADY</span>';
+          momentumHtml = `
+            <div class="perf-stat">
+              <div class="perf-stat-label">Last 6 Holes</div>
+              <div class="perf-stat-value">${momLabel}</div>
+              <div style="font-size:9px;color:#4a5a6a;margin-top:2px;">${pa.momentumDetail.birdies}B / ${pa.momentumDetail.bogeys}Bo</div>
+            </div>`;
+        }
+
+        perfSectionHtml = `
+          <div class="perf-section">
+            <div class="perf-section-title">Performance Analytics</div>
+            <div class="perf-grid">
+              <div class="perf-stat">
+                <div class="perf-stat-label">Perf Index</div>
+                <div class="perf-stat-value ${piColor}">${piVal >= 0 ? '+' : ''}${piVal.toFixed(3)}</div>
+              </div>
+              <div class="perf-stat">
+                <div class="perf-stat-label">Birdie Rate</div>
+                <div class="perf-stat-value good">${birdiePercent}%</div>
+              </div>
+              <div class="perf-stat">
+                <div class="perf-stat-label">Bogey Rate</div>
+                <div class="perf-stat-value bad">${bogeyPercent}%</div>
+              </div>
+              <div class="perf-stat">
+                <div class="perf-stat-label">Par Rate</div>
+                <div class="perf-stat-value">${parPercent}%</div>
+              </div>
+              <div class="perf-stat">
+                <div class="perf-stat-label">Holes Played</div>
+                <div class="perf-stat-value">${pa.totalHolesPlayed}</div>
+              </div>
+              ${momentumHtml}
+              ${bestWorstHtml}
+              ${trendHtml}
+            </div>
+          </div>`;
+      }
+
       overlay.innerHTML = `<div class="scorecard-modal">
         <button class="scorecard-close" onclick="this.closest('.scorecard-overlay').remove()">&times;</button>
         <div class="scorecard-header">
@@ -1988,6 +2623,7 @@
             <div class="scorecard-stat-value">${player.thru}</div>
           </div>
         </div>
+        ${perfSectionHtml}
         <div class="scorecard-rounds-summary">${roundChipsHtml}</div>
         ${gridsHtml || '<div style="color:#4a5a6a;font-size:12px;text-align:center;padding:20px;">No hole-by-hole data available yet</div>'}
         <div class="scorecard-legend">
