@@ -1833,23 +1833,33 @@
     const parlayData = {
       fanduel: [
         {
-          label: 'Rahm + Morikawa + MacIntyre', badge: 'Value', badgeClass: '',
+          label: 'Scheffler + Rahm + \u00c5berg', badge: 'Value', badgeClass: '',
           hot: true,
+          legs: [
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+120' },
+            { player: 'Jon Rahm', prop: 'Top 5', odds: '+250' },
+            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+200' },
+          ],
+          payout: '$740', book: 'FanDuel'
+        },
+        {
+          label: 'Scheffler + MacIntyre', badge: 'Safe', badgeClass: 'safe',
+          hot: true,
+          legs: [
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+120' },
+            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+280' },
+          ],
+          payout: '$84', book: 'FanDuel'
+        },
+        {
+          label: 'Rahm + Morikawa + MacIntyre', badge: 'Value', badgeClass: '',
+          hot: false,
           legs: [
             { player: 'Jon Rahm', prop: 'Top 5', odds: '+250' },
             { player: 'Collin Morikawa', prop: 'Top 10', odds: '+300' },
             { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+280' },
           ],
           payout: '$950', book: 'FanDuel'
-        },
-        {
-          label: '\u00c5berg + Fleetwood Pair', badge: 'Value', badgeClass: '',
-          hot: false,
-          legs: [
-            { player: 'Ludvig \u00c5berg', prop: 'Top 5', odds: '+350' },
-            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+250' },
-          ],
-          payout: '$158', book: 'FanDuel'
         },
         {
           label: 'Gotterup + Hovland Longshot', badge: 'Longshot', badgeClass: 'longshot',
@@ -1862,7 +1872,7 @@
         },
         {
           label: 'Schauffele + Fitzpatrick Safe', badge: 'Safe', badgeClass: 'safe',
-          hot: true,
+          hot: false,
           legs: [
             { player: 'Xander Schauffele', prop: 'Top 10', odds: '+180' },
             { player: 'Matt Fitzpatrick', prop: 'Top 10', odds: '+225' },
@@ -1872,8 +1882,27 @@
       ],
       draftkings: [
         {
-          label: 'DeChambeau + \u00c5berg + MacIntyre', badge: 'Value', badgeClass: '',
+          label: 'Scheffler + DeChambeau + Fleetwood', badge: 'Value', badgeClass: '',
           hot: true,
+          legs: [
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+110' },
+            { player: 'Bryson DeChambeau', prop: 'Top 5', odds: '+275' },
+            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+225' },
+          ],
+          payout: '$780', book: 'DraftKings'
+        },
+        {
+          label: 'Scheffler + Matsuyama Safe', badge: 'Safe', badgeClass: 'safe',
+          hot: true,
+          legs: [
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+110' },
+            { player: 'Hideki Matsuyama', prop: 'Top 10', odds: '+250' },
+          ],
+          payout: '$74', book: 'DraftKings'
+        },
+        {
+          label: 'DeChambeau + \u00c5berg + MacIntyre', badge: 'Value', badgeClass: '',
+          hot: false,
           legs: [
             { player: 'Bryson DeChambeau', prop: 'Top 5', odds: '+275' },
             { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+250' },
