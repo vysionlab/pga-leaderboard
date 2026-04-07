@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pga-live-v3';
+const CACHE_NAME = 'pga-live-v4';
 const ASSETS = [
   '/pga-leaderboard/',
   '/pga-leaderboard/index.html',
