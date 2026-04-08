@@ -1004,7 +1004,7 @@
           <div class="view-odds active" id="viewOdds">
             <div class="odds-section">
               <div class="odds-title-row">
-                <div class="odds-section-title" id="oddsSectionTitle">The Masters</div>
+                <div class="odds-section-title" id="oddsSectionTitle">Tournament Odds</div>
                 <div class="odds-disclaimer">Pre-tournament odds \u00b7 Verify on sportsbook</div>
               </div>
               <div class="odds-header">
@@ -1754,76 +1754,84 @@
 
     // ==========================================
     // BETTING ODDS DATA
+    // 2026 Masters Tournament — Augusta National Golf Club
+    // April 9-12, 2026 | Odds as of April 8, 2026
     // ==========================================
     const oddsData = {
       fanduel: [
         { player: 'Scottie Scheffler', odds: '+500' },
         { player: 'Bryson DeChambeau', odds: '+1000' },
         { player: 'Jon Rahm', odds: '+1000' },
-        { player: 'Rory McIlroy', odds: '+1200' },
-        { player: 'Ludvig \u00c5berg', odds: '+1600' },
-        { player: 'Xander Schauffele', odds: '+1600' },
+        { player: 'Rory McIlroy', odds: '+1300' },
+        { player: 'Xander Schauffele', odds: '+1500' },
+        { player: 'Ludvig \u00c5berg', odds: '+1800' },
         { player: 'Matt Fitzpatrick', odds: '+2000' },
         { player: 'Cameron Young', odds: '+2200' },
         { player: 'Tommy Fleetwood', odds: '+2200' },
         { player: 'Hideki Matsuyama', odds: '+2700' },
-        { player: 'Justin Rose', odds: '+2700' },
         { player: 'Robert MacIntyre', odds: '+3000' },
+        { player: 'Justin Rose', odds: '+3000' },
         { player: 'Min Woo Lee', odds: '+3300' },
         { player: 'Collin Morikawa', odds: '+3500' },
+        { player: 'Patrick Reed', odds: '+3500' },
         { player: 'Brooks Koepka', odds: '+4000' },
-        { player: 'Patrick Reed', odds: '+4000' },
+        { player: 'Chris Gotterup', odds: '+4500' },
+        { player: 'Russell Henley', odds: '+4500' },
+        { player: 'Si Woo Kim', odds: '+4500' },
         { player: 'Jordan Spieth', odds: '+4500' },
         { player: 'Viktor Hovland', odds: '+5000' },
-        { player: 'Shane Lowry', odds: '+6000' },
-        { player: 'Nicolai H\u00f8jgaard', odds: '+6000' },
+        { player: 'Shane Lowry', odds: '+5500' },
+        { player: 'Nicol\u00e1i H\u00f8jgaard', odds: '+6000' },
+        { player: 'Jake Knapp', odds: '+6500' },
+        { player: 'Justin Thomas', odds: '+6500' },
+        { player: 'Akshay Bhatia', odds: '+6500' },
+        { player: 'Maverick McNealy', odds: '+6500' },
+        { player: 'Adam Scott', odds: '+7000' },
+        { player: 'Tyrrell Hatton', odds: '+7000' },
+        { player: 'Jason Day', odds: '+7500' },
+        { player: 'Sepp Straka', odds: '+7500' },
+        { player: 'Corey Conners', odds: '+8000' },
       ],
       draftkings: [
-        { player: 'Scottie Scheffler', odds: '+490' },
+        { player: 'Scottie Scheffler', odds: '+485' },
         { player: 'Jon Rahm', odds: '+910' },
         { player: 'Bryson DeChambeau', odds: '+1075' },
-        { player: 'Rory McIlroy', odds: '+1175' },
-        { player: 'Ludvig \u00c5berg', odds: '+1700' },
-        { player: 'Xander Schauffele', odds: '+1800' },
-        { player: 'Tommy Fleetwood', odds: '+2300' },
-        { player: 'Cameron Young', odds: '+2300' },
-        { player: 'Matt Fitzpatrick', odds: '+2350' },
+        { player: 'Rory McIlroy', odds: '+1150' },
+        { player: 'Ludvig \u00c5berg', odds: '+1650' },
+        { player: 'Xander Schauffele', odds: '+1850' },
+        { player: 'Cameron Young', odds: '+2400' },
+        { player: 'Tommy Fleetwood', odds: '+2500' },
+        { player: 'Matt Fitzpatrick', odds: '+2600' },
         { player: 'Collin Morikawa', odds: '+3100' },
-        { player: 'Robert MacIntyre', odds: '+3400' },
-        { player: 'Justin Rose', odds: '+3500' },
-        { player: 'Hideki Matsuyama', odds: '+3600' },
-        { player: 'Jordan Spieth', odds: '+3600' },
-        { player: 'Brooks Koepka', odds: '+3700' },
-        { player: 'Chris Gotterup', odds: '+4200' },
-        { player: 'Patrick Reed', odds: '+4300' },
+        { player: 'Robert MacIntyre', odds: '+3250' },
+        { player: 'Patrick Reed', odds: '+3500' },
+        { player: 'Justin Rose', odds: '+3600' },
+        { player: 'Brooks Koepka', odds: '+3800' },
+        { player: 'Jordan Spieth', odds: '+3800' },
+        { player: 'Hideki Matsuyama', odds: '+4000' },
+        { player: 'Russell Henley', odds: '+4200' },
+        { player: 'Chris Gotterup', odds: '+4300' },
         { player: 'Viktor Hovland', odds: '+4600' },
-        { player: 'Russell Henley', odds: '+4700' },
-        { player: 'Si Woo Kim', odds: '+4900' },
-        { player: 'Justin Thomas', odds: '+5400' },
+        { player: 'Si Woo Kim', odds: '+4700' },
         { player: 'Min Woo Lee', odds: '+5400' },
-        { player: 'Akshay Bhatia', odds: '+5700' },
-        { player: 'Patrick Cantlay', odds: '+5800' },
-        { player: 'Adam Scott', odds: '+6000' },
-        { player: 'Jason Day', odds: '+6700' },
-        { player: 'Jake Knapp', odds: '+6700' },
-        { player: 'Shane Lowry', odds: '+6800' },
-        { player: 'Sam Burns', odds: '+7000' },
-        { player: 'J.J. Spaun', odds: '+7200' },
-        { player: 'Sepp Straka', odds: '+7400' },
-        { player: 'Tyrrell Hatton', odds: '+7600' },
-        { player: 'Corey Conners', odds: '+7800' },
-        { player: 'Nicolai H\u00f8jgaard', odds: '+7800' },
-        { player: 'Maverick McNealy', odds: '+8400' },
-        { player: 'Kurt Kitayama', odds: '+9800' },
-        { player: 'Daniel Berger', odds: '+10500' },
-        { player: 'Cameron Smith', odds: '+11000' },
-        { player: 'Max Homa', odds: '+12000' },
-        { player: 'Keegan Bradley', odds: '+13500' },
+        { player: 'Justin Thomas', odds: '+5500' },
+        { player: 'Patrick Cantlay', odds: '+5700' },
+        { player: 'Adam Scott', odds: '+6200' },
+        { player: 'Akshay Bhatia', odds: '+6600' },
+        { player: 'Sepp Straka', odds: '+6700' },
+        { player: 'Jason Day', odds: '+6900' },
+        { player: 'Jake Knapp', odds: '+6900' },
+        { player: 'Tyrrell Hatton', odds: '+6900' },
+        { player: 'Shane Lowry', odds: '+7000' },
+        { player: 'Sam Burns', odds: '+7200' },
+        { player: 'Corey Conners', odds: '+8200' },
+        { player: 'Nicol\u00e1i H\u00f8jgaard', odds: '+8400' },
       ]
     };
 
     // ==========================================
     // PARLAY DATA
+    // 2026 Masters — prop odds estimated from outright lines
     // ==========================================
     const parlayData = {
       fanduel: [
@@ -1831,39 +1839,48 @@
           label: 'Scheffler + Rahm + \u00c5berg', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+110' },
-            { player: 'Jon Rahm', prop: 'Top 5', odds: '+175' },
-            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+154' },
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+115' },
+            { player: 'Jon Rahm', prop: 'Top 5', odds: '+220' },
+            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+225' },
           ],
-          payout: '$147', book: 'FanDuel'
+          payout: '$214', book: 'FanDuel'
         },
         {
-          label: 'Scheffler + MacIntyre', badge: 'Safe', badgeClass: 'safe',
+          label: 'Scheffler + McIlroy Safe', badge: 'Safe', badgeClass: 'safe',
           hot: true,
           legs: [
-            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+110' },
-            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+240' },
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+115' },
+            { player: 'Rory McIlroy', prop: 'Top 10', odds: '+135' },
           ],
-          payout: '$71', book: 'FanDuel'
+          payout: '$41', book: 'FanDuel'
         },
         {
-          label: 'Rahm + Morikawa + MacIntyre', badge: 'Value', badgeClass: '',
+          label: 'Rahm + Schauffele + Fleetwood', badge: 'Value', badgeClass: '',
           hot: false,
           legs: [
-            { player: 'Jon Rahm', prop: 'Top 5', odds: '+175' },
-            { player: 'Collin Morikawa', prop: 'Top 10', odds: '+215' },
-            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+240' },
+            { player: 'Jon Rahm', prop: 'Top 5', odds: '+220' },
+            { player: 'Xander Schauffele', prop: 'Top 10', odds: '+190' },
+            { player: 'Tommy Fleetwood', prop: 'Top 20', odds: '+168' },
           ],
-          payout: '$295', book: 'FanDuel'
+          payout: '$239', book: 'FanDuel'
         },
         {
-          label: 'Schauffele + Fitzpatrick Safe', badge: 'Safe', badgeClass: 'safe',
+          label: 'Koepka + Spieth Longshot', badge: 'Longshot', badgeClass: 'longshot',
           hot: false,
           legs: [
-            { player: 'Xander Schauffele', prop: 'Top 10', odds: '+140' },
-            { player: 'Matt Fitzpatrick', prop: 'Top 10', odds: '+176' },
+            { player: 'Brooks Koepka', prop: 'Top 5', odds: '+890' },
+            { player: 'Jordan Spieth', prop: 'Top 10', odds: '+565' },
           ],
-          payout: '$66', book: 'FanDuel'
+          payout: '$648', book: 'FanDuel'
+        },
+        {
+          label: 'DeChambeau + MacIntyre Safe', badge: 'Safe', badgeClass: 'safe',
+          hot: false,
+          legs: [
+            { player: 'Bryson DeChambeau', prop: 'Top 10', odds: '+125' },
+            { player: 'Robert MacIntyre', prop: 'Top 20', odds: '+230' },
+          ],
+          payout: '$64', book: 'FanDuel'
         },
       ],
       draftkings: [
@@ -1871,39 +1888,58 @@
           label: 'Scheffler + DeChambeau + Fleetwood', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+110' },
-            { player: 'Bryson DeChambeau', prop: 'Top 5', odds: '+210' },
-            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+168' },
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+108' },
+            { player: 'Bryson DeChambeau', prop: 'Top 5', odds: '+240' },
+            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+315' },
           ],
-          payout: '$175', book: 'DraftKings'
+          payout: '$284', book: 'DraftKings'
         },
         {
-          label: 'Scheffler + Matsuyama Safe', badge: 'Safe', badgeClass: 'safe',
+          label: 'Scheffler + \u00c5berg Safe', badge: 'Safe', badgeClass: 'safe',
           hot: true,
           legs: [
-            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+110' },
-            { player: 'Hideki Matsuyama', prop: 'Top 10', odds: '+196' },
+            { player: 'Scottie Scheffler', prop: 'Top 5', odds: '+108' },
+            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+205' },
           ],
-          payout: '$62', book: 'DraftKings'
+          payout: '$53', book: 'DraftKings'
         },
         {
-          label: 'DeChambeau + \u00c5berg + MacIntyre', badge: 'Value', badgeClass: '',
+          label: 'Rahm + Schauffele + MacIntyre', badge: 'Value', badgeClass: '',
           hot: false,
           legs: [
-            { player: 'Bryson DeChambeau', prop: 'Top 5', odds: '+210' },
-            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+154' },
-            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+240' },
+            { player: 'Jon Rahm', prop: 'Top 5', odds: '+200' },
+            { player: 'Xander Schauffele', prop: 'Top 10', odds: '+230' },
+            { player: 'Robert MacIntyre', prop: 'Top 20', odds: '+250' },
           ],
-          payout: '$268', book: 'DraftKings'
+          payout: '$337', book: 'DraftKings'
+        },
+        {
+          label: 'Fleetwood + Young Top 20 Safe', badge: 'Safe', badgeClass: 'safe',
+          hot: false,
+          legs: [
+            { player: 'Tommy Fleetwood', prop: 'Top 20', odds: '+192' },
+            { player: 'Cameron Young', prop: 'Top 20', odds: '+185' },
+          ],
+          payout: '$73', book: 'DraftKings'
+        },
+        {
+          label: 'Spieth + Koepka + Reed', badge: 'Longshot', badgeClass: 'longshot',
+          hot: false,
+          legs: [
+            { player: 'Jordan Spieth', prop: 'Top 5', odds: '+845' },
+            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+475' },
+            { player: 'Patrick Reed', prop: 'Top 20', odds: '+270' },
+          ],
+          payout: '$2,000', book: 'DraftKings'
         },
         {
           label: 'Rahm + Koepka', badge: 'Value', badgeClass: '',
-          hot: false,
+          hot: true,
           legs: [
-            { player: 'Jon Rahm', prop: 'Top 5', odds: '+175' },
-            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+290' },
+            { player: 'Jon Rahm', prop: 'Top 5', odds: '+200' },
+            { player: 'Brooks Koepka', prop: 'Top 10', odds: '+475' },
           ],
-          payout: '$107', book: 'DraftKings'
+          payout: '$163', book: 'DraftKings'
         },
       ]
     };
