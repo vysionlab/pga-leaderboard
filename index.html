@@ -1004,7 +1004,7 @@
           <div class="view-odds active" id="viewOdds">
             <div class="odds-section">
               <div class="odds-title-row">
-                <div class="odds-section-title" id="oddsSectionTitle">Tournament Odds</div>
+                <div class="odds-section-title" id="oddsSectionTitle">2026 RBC Heritage</div>
                 <div class="odds-disclaimer">Pre-tournament odds \u00b7 Verify on sportsbook</div>
               </div>
               <div class="odds-header">
@@ -1760,10 +1760,10 @@
     const oddsData = {
       fanduel: [
         { player: 'Scottie Scheffler', odds: '+390' },
+        { player: 'Matt Fitzpatrick', odds: '+1500' },
         { player: 'Xander Schauffele', odds: '+1500' },
-        { player: 'Matt Fitzpatrick', odds: '+1600' },
-        { player: 'Russell Henley', odds: '+1800' },
-        { player: 'Cameron Young', odds: '+2000' },
+        { player: 'Russell Henley', odds: '+1600' },
+        { player: 'Cameron Young', odds: '+1800' },
         { player: 'Tommy Fleetwood', odds: '+2000' },
         { player: 'Ludvig \u00c5berg', odds: '+2200' },
         { player: 'Patrick Cantlay', odds: '+2200' },
@@ -1816,7 +1816,7 @@
 
     // ==========================================
     // PARLAY DATA
-    // 2026 RBC Heritage — prop odds derived from outright lines
+    // 2026 RBC Heritage — verified props from sportsbook sources (FanDuel & DraftKings)
     // ==========================================
     const parlayData = {
       fanduel: [
@@ -1857,15 +1857,6 @@
           ],
           payout: '$383', book: 'FanDuel'
         },
-        {
-          label: '\u00c5berg + Morikawa Safe', badge: 'Safe', badgeClass: 'safe',
-          hot: false,
-          legs: [
-            { player: 'Ludvig \u00c5berg', prop: 'Top 10', odds: '+230' },
-            { player: 'Collin Morikawa', prop: 'Top 20', odds: '+115' },
-          ],
-          payout: '$61', book: 'FanDuel'
-        },
       ],
       draftkings: [
         {
@@ -1903,25 +1894,6 @@
             { player: 'Viktor Hovland', prop: 'Top 5', odds: '+793' },
           ],
           payout: '$356', book: 'DraftKings'
-        },
-        {
-          label: 'Fitzpatrick + Spieth + Morikawa', badge: 'Value', badgeClass: '',
-          hot: false,
-          legs: [
-            { player: 'Matt Fitzpatrick', prop: 'Top 5', odds: '+385' },
-            { player: 'Collin Morikawa', prop: 'Top 10', odds: '+265' },
-            { player: 'Jordan Spieth', prop: 'Top 20', odds: '+148' },
-          ],
-          payout: '$429', book: 'DraftKings'
-        },
-        {
-          label: 'Burns + Cantlay Safe', badge: 'Safe', badgeClass: 'safe',
-          hot: false,
-          legs: [
-            { player: 'Sam Burns', prop: 'Top 10', odds: '+270' },
-            { player: 'Patrick Cantlay', prop: 'Top 20', odds: '+100' },
-          ],
-          payout: '$64', book: 'DraftKings'
         },
       ]
     };
