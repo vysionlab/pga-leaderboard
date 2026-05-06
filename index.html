@@ -1763,7 +1763,7 @@
         { player: 'Cameron Young', odds: '+950' },
         { player: 'Xander Schauffele', odds: '+1000' },
         { player: 'Matt Fitzpatrick', odds: '+1500' },
-        { player: 'Ludvig \u00c5berg', odds: '+1800' },
+        { player: 'Ludvig Åberg', odds: '+1800' },
         { player: 'Tommy Fleetwood', odds: '+2200' },
         { player: 'Si Woo Kim', odds: '+2500' },
         { player: 'Min Woo Lee', odds: '+3300' },
@@ -1775,24 +1775,32 @@
         { player: 'Viktor Hovland', odds: '+3500' },
         { player: 'Hideki Matsuyama', odds: '+3500' },
         { player: 'Patrick Cantlay', odds: '+3500' },
+        { player: 'Sepp Straka', odds: '+4500' },
+        { player: 'Harris English', odds: '+5000' },
+        { player: 'Wyndham Clark', odds: '+6000' },
+        { player: 'Alex Smalley', odds: '+7000' },
       ],
       draftkings: [
-        { player: 'Rory McIlroy', odds: '+580' },
-        { player: 'Cameron Young', odds: '+920' },
-        { player: 'Xander Schauffele', odds: '+1150' },
-        { player: 'Matt Fitzpatrick', odds: '+1700' },
-        { player: 'Ludvig \u00c5berg', odds: '+1850' },
-        { player: 'Tommy Fleetwood', odds: '+2350' },
-        { player: 'Si Woo Kim', odds: '+2400' },
-        { player: 'Adam Scott', odds: '+3000' },
-        { player: 'Sam Burns', odds: '+3200' },
-        { player: 'Patrick Cantlay', odds: '+3200' },
-        { player: 'Viktor Hovland', odds: '+3500' },
-        { player: 'Hideki Matsuyama', odds: '+3600' },
-        { player: 'Robert MacIntyre', odds: '+3800' },
-        { player: 'Rickie Fowler', odds: '+3800' },
-        { player: 'Min Woo Lee', odds: '+3900' },
-        { player: 'Ben Griffin', odds: '+4300' },
+        { player: 'Rory McIlroy', odds: '+600' },
+        { player: 'Cameron Young', odds: '+900' },
+        { player: 'Xander Schauffele', odds: '+1200' },
+        { player: 'Matt Fitzpatrick', odds: '+1600' },
+        { player: 'Ludvig Åberg', odds: '+1800' },
+        { player: 'Tommy Fleetwood', odds: '+2400' },
+        { player: 'Si Woo Kim', odds: '+2600' },
+        { player: 'Min Woo Lee', odds: '+3500' },
+        { player: 'Adam Scott', odds: '+3500' },
+        { player: 'Robert MacIntyre', odds: '+3500' },
+        { player: 'Sam Burns', odds: '+3500' },
+        { player: 'Rickie Fowler', odds: '+3700' },
+        { player: 'Ben Griffin', odds: '+3700' },
+        { player: 'Viktor Hovland', odds: '+3700' },
+        { player: 'Hideki Matsuyama', odds: '+3700' },
+        { player: 'Patrick Cantlay', odds: '+3700' },
+        { player: 'Sepp Straka', odds: '+4500' },
+        { player: 'Harris English', odds: '+5000' },
+        { player: 'Alex Smalley', odds: '+7000' },
+        { player: 'Denny McCarthy', odds: '+7500' },
       ]
     };
 
@@ -1804,78 +1812,78 @@
     const parlayData = {
       fanduel: [
         {
-          label: 'Kim T20 + Griffin T20 Safe Play', badge: 'Safe', badgeClass: 'safe',
+          label: 'Schauffele T10 + Kim T20 Safe Play', badge: 'Safe', badgeClass: 'safe',
           hot: true,
           legs: [
-            { player: 'Si Woo Kim', prop: 'Top 20', odds: '-125' },
-            { player: 'Ben Griffin', prop: 'Top 20', odds: '+115' },
+            { player: 'Xander Schauffele', prop: 'Top 10', odds: '-145' },
+            { player: 'Si Woo Kim', prop: 'Top 20', odds: '-118' },
           ],
-          payout: '$287', book: 'FanDuel'
+          payout: '$212', book: 'FanDuel'
         },
         {
-          label: '\u00c5berg T5 + Smalley T20 Value', badge: 'Value', badgeClass: '',
+          label: 'Fitzpatrick T5 + Fleetwood T10 Value', badge: 'Value', badgeClass: '',
           hot: true,
           legs: [
-            { player: 'Ludvig \u00c5berg', prop: 'Top 5', odds: '+335' },
-            { player: 'Alex Smalley', prop: 'Top 20', odds: '+180' },
+            { player: 'Matt Fitzpatrick', prop: 'Top 5', odds: '+160' },
+            { player: 'Tommy Fleetwood', prop: 'Top 10', odds: '+130' },
           ],
-          payout: '$1,118', book: 'FanDuel'
+          payout: '$498', book: 'FanDuel'
         },
         {
-          label: 'Young To Win + Kim T20 Value', badge: 'Value', badgeClass: '',
+          label: 'MacIntyre T10 + Åberg T5 Value', badge: 'Value', badgeClass: '',
+          hot: false,
+          legs: [
+            { player: 'Robert MacIntyre', prop: 'Top 10', odds: '+240' },
+            { player: 'Ludvig Åberg', prop: 'Top 5', odds: '+230' },
+          ],
+          payout: '$1,022', book: 'FanDuel'
+        },
+        {
+          label: 'Young To Win + Åberg T5 Longshot', badge: 'Longshot', badgeClass: 'longshot',
           hot: false,
           legs: [
             { player: 'Cameron Young', prop: 'To Win', odds: '+950' },
-            { player: 'Si Woo Kim', prop: 'Top 20', odds: '-125' },
+            { player: 'Ludvig Åberg', prop: 'Top 5', odds: '+230' },
           ],
-          payout: '$1,790', book: 'FanDuel'
-        },
-        {
-          label: 'Young To Win + \u00c5berg T5 Longshot', badge: 'Longshot', badgeClass: 'longshot',
-          hot: false,
-          legs: [
-            { player: 'Cameron Young', prop: 'To Win', odds: '+950' },
-            { player: 'Ludvig \u00c5berg', prop: 'Top 5', odds: '+335' },
-          ],
-          payout: '$4,468', book: 'FanDuel'
+          payout: '$3,365', book: 'FanDuel'
         },
       ],
       draftkings: [
         {
-          label: 'Kim T20 + Griffin T20 Safe Play', badge: 'Safe', badgeClass: 'safe',
+          label: 'Kim T20 + Smalley T20 Safe', badge: 'Safe', badgeClass: 'safe',
           hot: true,
           legs: [
             { player: 'Si Woo Kim', prop: 'Top 20', odds: '-125' },
-            { player: 'Ben Griffin', prop: 'Top 20', odds: '+115' },
-          ],
-          payout: '$287', book: 'DraftKings'
-        },
-        {
-          label: '\u00c5berg T5 + McCarthy T10 Value', badge: 'Value', badgeClass: '',
-          hot: true,
-          legs: [
-            { player: 'Ludvig \u00c5berg', prop: 'Top 5', odds: '+335' },
-            { player: 'Denny McCarthy', prop: 'Top 10', odds: '+620' },
-          ],
-          payout: '$3,032', book: 'DraftKings'
-        },
-        {
-          label: 'McCarthy T10 + Smalley T20 Value', badge: 'Value', badgeClass: '',
-          hot: false,
-          legs: [
-            { player: 'Denny McCarthy', prop: 'Top 10', odds: '+620' },
             { player: 'Alex Smalley', prop: 'Top 20', odds: '+180' },
           ],
-          payout: '$1,916', book: 'DraftKings'
+          payout: '$404', book: 'DraftKings'
         },
         {
-          label: 'Young To Win + \u00c5berg T5 Longshot', badge: 'Longshot', badgeClass: 'longshot',
+          label: 'Åberg T5 + Kim T20 Value', badge: 'Value', badgeClass: '',
+          hot: true,
+          legs: [
+            { player: 'Ludvig Åberg', prop: 'Top 5', odds: '+335' },
+            { player: 'Si Woo Kim', prop: 'Top 20', odds: '-125' },
+          ],
+          payout: '$683', book: 'DraftKings'
+        },
+        {
+          label: 'Fitzpatrick T5 + McCarthy T10 Value', badge: 'Value', badgeClass: '',
           hot: false,
           legs: [
-            { player: 'Cameron Young', prop: 'To Win', odds: '+920' },
-            { player: 'Ludvig \u00c5berg', prop: 'Top 5', odds: '+335' },
+            { player: 'Matt Fitzpatrick', prop: 'Top 5', odds: '+175' },
+            { player: 'Denny McCarthy', prop: 'Top 10', odds: '+620' },
           ],
-          payout: '$4,337', book: 'DraftKings'
+          payout: '$1,880', book: 'DraftKings'
+        },
+        {
+          label: 'Young To Win + Åberg T5 Longshot', badge: 'Longshot', badgeClass: 'longshot',
+          hot: false,
+          legs: [
+            { player: 'Cameron Young', prop: 'To Win', odds: '+900' },
+            { player: 'Ludvig Åberg', prop: 'Top 5', odds: '+335' },
+          ],
+          payout: '$4,250', book: 'DraftKings'
         },
       ]
     };
