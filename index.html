@@ -12,6 +12,7 @@
   <meta property="og:image" content="icon-512.png">
   <meta property="og:type" content="website">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>PGA Tour Live Leaderboard</title>
   <style>
@@ -85,6 +86,10 @@
       background: transparent; color: #64748b;
       border: 1px solid #2a3a4a;
     }
+    .live-badge.stale {
+      background: rgba(251,191,36,0.08); color: #fbbf24;
+      border: 1px solid rgba(251,191,36,0.28);
+    }
     @keyframes livePulse {
       0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(225,29,72,0.4); }
       50% { opacity: 0.85; box-shadow: 0 0 16px rgba(225,29,72,0.7); }
@@ -128,11 +133,40 @@
 
     .course-bar {
       background: #0a0e1a; padding: 7px 20px;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
       border-bottom: 1px solid rgba(255,255,255,0.04);
       font-size: 11px; color: #3a4a5a;
     }
+    .course-bar-left {
+      display: flex; align-items: center; gap: 10px; min-width: 0;
+    }
     .refresh-info { font-size: 10px; color: #3a5a3e; }
+    .refresh-info.stale { color: #fbbf24; }
+    .player-count {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5a6a;
+      white-space: nowrap;
+    }
+    .course-bar-controls {
+      display: flex; align-items: center; gap: 8px; min-width: 0;
+    }
+    .leaderboard-filter {
+      background: #111827; border: 1px solid rgba(255,255,255,0.08); border-radius: 5px;
+      color: #94a3b8; font-size: 11px; padding: 4px 24px 4px 8px;
+      font-family: 'Inter', sans-serif; outline: none;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a5a6a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center;
+    }
+    .leaderboard-filter:focus { border-color: rgba(74,222,128,0.4); }
+    .refresh-btn {
+      width: 26px; height: 26px; border-radius: 5px;
+      border: 1px solid rgba(255,255,255,0.08); background: #111827;
+      color: #94a3b8; cursor: pointer; font-size: 14px; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .refresh-btn:hover { color: #e2e8f0; border-color: rgba(74,222,128,0.3); }
+    .refresh-btn.loading { color: #4ade80; animation: spin 0.8s linear infinite; }
+    .refresh-btn:disabled { cursor: default; opacity: 0.7; }
 
     .loading { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
     .loading-spinner { width: 40px; height: 40px; border: 3px solid #1e2a3a; border-top-color: #00a80a; border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -141,6 +175,10 @@
 
     .error-msg { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: #e11d48; font-size: 14px; padding: 20px; text-align: center; }
     .error-msg .retry-btn { background: #1e2a3a; border: 1px solid #2a3a4a; color: #8892b0; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .empty-state {
+      min-height: 220px; display: flex; align-items: center; justify-content: center;
+      color: #64748b; font-size: 13px; text-align: center; padding: 24px;
+    }
 
     .leaderboard { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; min-height: 0; }
     .leaderboard::-webkit-scrollbar { width: 4px; }
@@ -183,7 +221,7 @@
     .pos { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #94a3b8; }
     .pos.leader { color: #fbbf24; }
 
-    .player-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .player-info { display: flex; align-items: center; gap: 10px; overflow: hidden; min-width: 0; }
     .player-flag { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; flex-shrink: 0; }
     .player-flag-emoji { font-size: 16px; flex-shrink: 0; }
     .player-name { font-size: 13px; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -638,20 +676,26 @@
       .tournament-subtitle { font-size: 10px; }
 
       .col-headers {
-        grid-template-columns: 36px 1fr 56px 56px 36px;
+        grid-template-columns: 34px minmax(0, 1fr) 68px 68px 34px;
         padding: 8px 12px; font-size: 9px;
       }
       .col-headers > div:last-child { display: none; }
 
       .player-row {
-        grid-template-columns: 36px 1fr 56px 56px 36px;
+        grid-template-columns: 34px minmax(0, 1fr) 68px 68px 34px;
         padding: 6px 12px;
       }
       .player-row .recent-holes { display: none; }
+      .player-info { gap: 6px; }
       .player-name { font-size: 12px; }
+      .player-info .form-indicator, .player-info .momentum-icon, .player-info .perf-badge { display: none; }
       .flap-cell { width: 20px; height: 26px; font-size: 12px; }
 
       .course-bar { padding: 5px 12px; font-size: 10px; }
+      .course-bar { align-items: stretch; flex-direction: column; gap: 6px; }
+      .course-bar-left, .course-bar-controls { justify-content: space-between; width: 100%; }
+      .leaderboard-filter { flex: 0 0 96px; }
+      .search-input { flex: 1; width: auto; min-width: 0; }
 
       .odds-row { grid-template-columns: 28px 1fr 42px 52px 42px; padding: 5px 12px; }
       .odds-header { grid-template-columns: 28px 1fr 42px 52px 42px; padding: 6px 12px; }
@@ -966,8 +1010,21 @@
       <!-- LEFT: Leaderboard -->
       <div class="left-panel" id="leftPanel">
         <div class="course-bar">
-          <div id="refreshInfo" class="refresh-info"></div>
-          <input type="text" class="search-input" id="playerSearch" placeholder="Search players..." oninput="filterLeaderboard()">
+          <div class="course-bar-left">
+            <div id="refreshInfo" class="refresh-info"></div>
+            <div id="playerCount" class="player-count"></div>
+          </div>
+          <div class="course-bar-controls">
+            <select id="leaderboardFilter" class="leaderboard-filter" onchange="applyLeaderboardFilters()">
+              <option value="all">All</option>
+              <option value="top10">Top 10</option>
+              <option value="active">Active</option>
+              <option value="finished">Finished</option>
+              <option value="moving">Moved</option>
+            </select>
+            <input type="text" class="search-input" id="playerSearch" placeholder="Search players..." oninput="applyLeaderboardFilters()">
+            <button class="refresh-btn" id="refreshBtn" onclick="fetchLeaderboard({ force: true })" title="Refresh leaderboard" aria-label="Refresh leaderboard">&#8635;</button>
+          </div>
         </div>
 
         <div class="col-headers" id="colHeaders" style="display:none">
@@ -1082,11 +1139,16 @@
   <script>
     const API_URL = 'https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
     const REFRESH_INTERVAL = 30000;
+    const LEADERBOARD_CACHE_KEY = 'pga-live-leaderboard-cache-v1';
 
     let previousScores = {};
     let previousTodayScores = {};
     let previousPositions = {};
     let isFirstLoad = true;
+    let isFetchingLeaderboard = false;
+    let lastSuccessfulRefresh = null;
+    let nextRefreshAt = Date.now() + REFRESH_INTERVAL;
+    let lastRenderWasStale = false;
     let currentBook = 'fanduel';
     let currentView = 'odds';
     let livePlayerData = {}; // name -> { pos, score } from leaderboard
@@ -1098,6 +1160,96 @@
     // BETTING INTELLIGENCE: ANALYTICS ENGINE
     // ==========================================
     let playerAnalytics = {}; // id -> { perfIndex, form, momentum, birdieRate, bogeyRate, ... }
+
+    function parsePosition(pos) {
+      const n = parseInt(String(pos || '').replace(/[^\d]/g, ''), 10);
+      return Number.isFinite(n) ? n : 999;
+    }
+
+    function cacheLeaderboardPayload(data) {
+      try {
+        localStorage.setItem(LEADERBOARD_CACHE_KEY, JSON.stringify({
+          fetchedAt: Date.now(),
+          data
+        }));
+      } catch (err) {
+        // Local storage can be unavailable in private browsing or full devices.
+      }
+    }
+
+    function loadCachedLeaderboardPayload() {
+      try {
+        const raw = localStorage.getItem(LEADERBOARD_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed?.data?.events?.length) return null;
+        return parsed;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function setRefreshButtonLoading(isLoading) {
+      const btn = document.getElementById('refreshBtn');
+      if (!btn) return;
+      btn.disabled = isLoading;
+      btn.classList.toggle('loading', isLoading);
+    }
+
+    function updateRefreshInfo() {
+      const el = document.getElementById('refreshInfo');
+      if (!el) return;
+      el.classList.toggle('stale', lastRenderWasStale || !navigator.onLine);
+
+      if (!lastSuccessfulRefresh) {
+        el.textContent = navigator.onLine ? 'Waiting for first update' : 'Offline';
+        return;
+      }
+
+      const updated = new Date(lastSuccessfulRefresh).toLocaleTimeString();
+      if (!navigator.onLine) {
+        el.textContent = `Offline · last update ${updated}`;
+        return;
+      }
+      if (lastRenderWasStale) {
+        el.textContent = `Cached · ${updated}`;
+        return;
+      }
+
+      const seconds = Math.max(0, Math.ceil((nextRefreshAt - Date.now()) / 1000));
+      el.textContent = `Updated ${updated} · next ${seconds}s`;
+    }
+
+    function updatePlayerCount(visible, total) {
+      const el = document.getElementById('playerCount');
+      if (!el) return;
+      if (!total) {
+        el.textContent = '';
+        return;
+      }
+      el.textContent = visible === total ? `${total} players` : `${visible}/${total} players`;
+    }
+
+    function getLeaderboardFilterValue() {
+      return document.getElementById('leaderboardFilter')?.value || 'all';
+    }
+
+    function getFilteredLeaderboardPlayers(players) {
+      const searchTerm = (document.getElementById('playerSearch')?.value || '').trim().toLowerCase();
+      const filter = getLeaderboardFilterValue();
+
+      return players.filter(p => {
+        if (searchTerm && !p.name.toLowerCase().includes(searchTerm)) return false;
+
+        const pos = parsePosition(p.pos);
+        const thru = String(p.thru || '');
+        if (filter === 'top10') return pos <= 10;
+        if (filter === 'active') return thru !== 'F' && thru !== '--' && !thru.includes(':');
+        if (filter === 'finished') return thru === 'F';
+        if (filter === 'moving') return (positionDeltas[p.id] || 0) !== 0;
+        return true;
+      });
+    }
 
     function computePlayerAnalytics(players) {
       playerAnalytics = {};
@@ -1117,7 +1269,7 @@
           worstRound: null,
           roundScores: [],
           avgScorePerHole: 0,
-          leaderboardPos: parseInt(String(p.pos).replace('T', '')) || 999,
+          leaderboardPos: parsePosition(p.pos),
         };
 
         // Collect all hole data across rounds
@@ -1241,14 +1393,26 @@
       return 0.05;
     }
 
+    function parseAmericanOdds(oddsStr) {
+      const n = parseInt(String(oddsStr || '').replace(/[^\d+-]/g, ''), 10);
+      return Number.isFinite(n) && n !== 0 ? n : null;
+    }
+
+    function americanOddsToImpliedProbability(oddsStr) {
+      const oddsNum = parseAmericanOdds(oddsStr);
+      if (oddsNum === null) return null;
+      if (oddsNum > 0) return 100 / (oddsNum + 100);
+      const absOdds = Math.abs(oddsNum);
+      return absOdds / (absOdds + 100);
+    }
+
     function computeEV(oddsStr, playerName, prop) {
       const live = getLiveInfo(playerName);
       if (!live) return null;
-      const pos = parseInt(live.pos.replace('T', '')) || 999;
-      const oddsNum = parseInt(oddsStr.replace('+', ''));
-      if (isNaN(oddsNum) || oddsNum <= 0) return null;
+      const pos = parsePosition(live.pos);
+      const impliedProb = americanOddsToImpliedProbability(oddsStr);
+      if (impliedProb === null) return null;
 
-      const impliedProb = 100 / (oddsNum + 100);
       let actualProb;
       if (prop === 'win') actualProb = positionToWinProb(pos);
       else if (prop === 'top5') actualProb = positionToTop5Prob(pos);
@@ -1483,21 +1647,26 @@
       if (!isFirstLoad) {
         players.forEach(p => {
           if (previousPositions[p.id] !== undefined) {
-            const oldPos = parseInt(String(previousPositions[p.id]).replace('T', '')) || 999;
-            const newPos = parseInt(String(p.pos).replace('T', '')) || 999;
+            const oldPos = parsePosition(previousPositions[p.id]);
+            const newPos = parsePosition(p.pos);
             const delta = oldPos - newPos;
             if (delta !== 0) positionDeltas[p.id] = delta;
           }
         });
       }
 
-      const searchTerm = (document.getElementById('playerSearch')?.value || '').toLowerCase();
+      const visiblePlayers = getFilteredLeaderboardPlayers(players);
+      const searchTerm = (document.getElementById('playerSearch')?.value || '').trim().toLowerCase();
+      const activeFilter = getLeaderboardFilterValue();
+      updatePlayerCount(visiblePlayers.length, players.length);
 
-      players.forEach((p, i) => {
-        // Search filter
-        if (searchTerm && !p.name.toLowerCase().includes(searchTerm)) return;
+      if (visiblePlayers.length === 0) {
+        lb.innerHTML = '<div class="empty-state">No players match this view.</div>';
+        return;
+      }
 
-        const isLeader = i === 0;
+      visiblePlayers.forEach((p, i) => {
+        const isLeader = parsePosition(p.pos) === 1;
         const posDisplay = p.pos.toString();
         const delta = positionDeltas[p.id] || 0;
         const deltaHtml = delta > 0 ? `<span class="pos-delta up">\u25B2${delta}</span>` : delta < 0 ? `<span class="pos-delta down">\u25BC${Math.abs(delta)}</span>` : '';
@@ -1581,8 +1750,8 @@
           existingRow.querySelector('.recent-holes').innerHTML = last3Html;
 
           if (previousPositions[p.id] !== undefined) {
-            const oldPos = parseInt(previousPositions[p.id]) || 999;
-            const newPos = parseInt(p.pos) || 999;
+            const oldPos = parsePosition(previousPositions[p.id]);
+            const newPos = parsePosition(p.pos);
             existingRow.classList.remove('moved-up', 'moved-down');
             if (newPos < oldPos) {
               existingRow.offsetHeight;
@@ -1628,7 +1797,7 @@
       lb.appendChild(fragment);
 
       // Insert cut line if round 3 or 4
-      if (currentRoundNum >= 3 && !searchTerm) {
+      if (currentRoundNum >= 3 && !searchTerm && activeFilter === 'all') {
         const rows = lb.querySelectorAll('.player-row');
         let cutInserted = false;
         rows.forEach((row, idx) => {
@@ -1661,95 +1830,129 @@
       document.getElementById('tickerContent').innerHTML = content + content;
     }
 
-    async function fetchLeaderboard() {
-      try {
-        const resp = await fetch(API_URL);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
-        const { players, event } = parseCompetitors(data);
+    function renderLeaderboardPayload(data, options = {}) {
+      const { stale = false, fetchedAt = Date.now() } = options;
+      const { players, event } = parseCompetitors(data);
 
-        if (!event) {
-          document.getElementById('leaderboard').innerHTML = '<div class="error-msg">No active tournament found<br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button></div>';
-          return;
-        }
+      if (!event) {
+        updatePlayerCount(0, 0);
+        document.getElementById('leaderboard').innerHTML = '<div class="error-msg">No active tournament found<br><button class="retry-btn" onclick="fetchLeaderboard({ force: true })">Retry</button></div>';
+        return false;
+      }
 
-        const eventName = event.name || 'PGA Tour Event';
-        document.getElementById('tournamentName').textContent = eventName;
+      const eventName = event.name || 'PGA Tour Event';
+      document.getElementById('tournamentName').textContent = eventName;
 
-        const status = event.status?.type?.state || 'pre';
-        const badge = document.getElementById('liveBadge');
-        if (status === 'in') { badge.textContent = '\u25cf LIVE'; badge.className = 'live-badge live'; }
-        else if (status === 'post') { badge.textContent = 'FINAL'; badge.className = 'live-badge final'; }
-        else { badge.textContent = 'UPCOMING'; badge.className = 'live-badge final'; }
+      const status = event.status?.type?.state || 'pre';
+      const badge = document.getElementById('liveBadge');
+      if (stale) { badge.textContent = 'STALE'; badge.className = 'live-badge stale'; }
+      else if (status === 'in') { badge.textContent = '\u25cf LIVE'; badge.className = 'live-badge live'; }
+      else if (status === 'post') { badge.textContent = 'FINAL'; badge.className = 'live-badge final'; }
+      else { badge.textContent = 'UPCOMING'; badge.className = 'live-badge final'; }
 
-        const courseName = event.courses?.[0]?.name || '';
-        const courseParVal = event.courses?.[0]?.par || 72;
-        const courseYards = event.courses?.[0]?.yards || '';
-        document.getElementById('courseInfo').textContent =
-          `${courseName ? courseName : 'Course TBD'} \u00b7 Par ${courseParVal}${courseYards ? ' \u00b7 ' + courseYards.toLocaleString() + ' yds' : ''}`;
-        const roundNum = event.status?.period || '';
-        currentRoundNum = parseInt(roundNum) || 0;
-        document.getElementById('roundInfo').textContent = roundNum ? `Round ${roundNum}` : '';
+      const courseName = event.courses?.[0]?.name || '';
+      const courseParVal = event.courses?.[0]?.par || 72;
+      const courseYards = event.courses?.[0]?.yards || '';
+      document.getElementById('courseInfo').textContent =
+        `${courseName ? courseName : 'Course TBD'} \u00b7 Par ${courseParVal}${courseYards ? ' \u00b7 ' + courseYards.toLocaleString() + ' yds' : ''}`;
+      const roundNum = event.status?.period || '';
+      currentRoundNum = parseInt(roundNum) || 0;
+      document.getElementById('roundInfo').textContent = roundNum ? `Round ${roundNum}` : '';
 
-        // Update odds section title dynamically
-        const oddsTitleEl = document.getElementById('oddsSectionTitle');
-        if (oddsTitleEl) oddsTitleEl.textContent = eventName;
+      // Update odds section title dynamically
+      const oddsTitleEl = document.getElementById('oddsSectionTitle');
+      if (oddsTitleEl) oddsTitleEl.textContent = eventName;
 
-        const totalRounds = 4;
-        const roundProgress = roundNum ? ((roundNum - 1) / totalRounds) * 100 : 0;
-        const leaderThru = players[0]?.thru;
-        let holeProgress = 0;
-        if (leaderThru === 'F') holeProgress = 100;
-        else if (typeof leaderThru === 'number') holeProgress = (leaderThru / 18) * 100;
-        const totalProgress = status === 'post' ? 100 : Math.min(roundProgress + (holeProgress / totalRounds), 99);
-        document.getElementById('progressBar').style.width = totalProgress + '%';
+      const totalRounds = 4;
+      const roundProgress = roundNum ? ((roundNum - 1) / totalRounds) * 100 : 0;
+      const leaderThru = players[0]?.thru;
+      let holeProgress = 0;
+      if (leaderThru === 'F') holeProgress = 100;
+      else if (typeof leaderThru === 'number') holeProgress = (leaderThru / 18) * 100;
+      const totalProgress = status === 'post' ? 100 : Math.min(roundProgress + (holeProgress / totalRounds), 99);
+      document.getElementById('progressBar').style.width = totalProgress + '%';
 
-        computePlayerAnalytics(players);
-        renderLeaderboard(players);
-        buildTicker(players, eventName);
+      computePlayerAnalytics(players);
+      renderLeaderboard(players);
+      buildTicker(players, eventName);
 
+      if (!stale) {
         players.forEach(p => {
           const prev = previousScores[p.id];
           if (prev !== undefined && prev !== p.totalScore) {
             const oldN = parseInt(prev), newN = parseInt(p.totalScore);
             if (!isNaN(oldN) && !isNaN(newN) && newN < oldN) {
-              const oldPos = parseInt(previousPositions[p.id]) || 999;
-              const newPos = parseInt(p.pos) || 999;
+              const oldPos = parsePosition(previousPositions[p.id]);
+              const newPos = parsePosition(p.pos);
               if (newPos < oldPos && newPos <= 5)
                 showToast(`\ud83d\udcc8 ${p.name} moves to ${p.pos} at ${formatScore(p.totalScore)}!`, 'movement');
             }
           }
         });
+      }
 
-        players.forEach(p => {
-          previousScores[p.id] = p.totalScore;
-          previousTodayScores[p.id] = p.todayScore;
-          previousPositions[p.id] = p.pos;
-        });
+      players.forEach(p => {
+        previousScores[p.id] = p.totalScore;
+        previousTodayScores[p.id] = p.todayScore;
+        previousPositions[p.id] = p.pos;
+      });
 
-        // Update live player lookup for odds/parlays
-        livePlayerData = {};
-        players.forEach(p => {
-          livePlayerData[p.name.toLowerCase()] = { pos: p.pos, score: formatScore(p.totalScore), thru: p.thru };
-        });
-        renderOdds(currentBook);
-        renderParlays(currentBook);
-        renderSavedParlays();
+      // Update live player lookup for odds/parlays
+      livePlayerData = {};
+      players.forEach(p => {
+        livePlayerData[p.name.toLowerCase()] = { pos: p.pos, score: formatScore(p.totalScore), thru: p.thru };
+      });
+      renderOdds(currentBook);
+      renderParlays(currentBook);
+      renderSavedParlays();
 
-        isFirstLoad = false;
-        document.getElementById('refreshInfo').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+      isFirstLoad = false;
+      lastSuccessfulRefresh = fetchedAt;
+      lastRenderWasStale = stale;
+      if (!stale) nextRefreshAt = Date.now() + REFRESH_INTERVAL;
+      updateRefreshInfo();
+      return true;
+    }
+
+    async function fetchLeaderboard(options = {}) {
+      if (isFetchingLeaderboard) return;
+      isFetchingLeaderboard = true;
+      setRefreshButtonLoading(true);
+
+      try {
+        const resp = await fetch(API_URL, { cache: options.force ? 'reload' : 'default' });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        cacheLeaderboardPayload(data);
+        renderLeaderboardPayload(data, { stale: false, fetchedAt: Date.now() });
 
       } catch (err) {
         console.error('Fetch error:', err);
+        const cached = loadCachedLeaderboardPayload();
+        if (cached && renderLeaderboardPayload(cached.data, { stale: true, fetchedAt: cached.fetchedAt })) {
+          showToast('Showing cached leaderboard while live data is unavailable', 'info');
+          return;
+        }
+
         const lb = document.getElementById('leaderboard');
         if (!lb.querySelector('.player-row')) {
-          lb.innerHTML = `<div class="error-msg">Failed to fetch leaderboard<br><span style="font-size:12px;color:#5a6a7a">${err.message}</span><br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button></div>`;
+          updatePlayerCount(0, 0);
+          lb.innerHTML = `<div class="error-msg">Failed to fetch leaderboard<br><span style="font-size:12px;color:#5a6a7a">${err.message}</span><br><button class="retry-btn" onclick="fetchLeaderboard({ force: true })">Retry</button></div>`;
+        } else {
+          lastRenderWasStale = true;
+          updateRefreshInfo();
+          showToast('Refresh failed; keeping the current leaderboard', 'info');
         }
+      } finally {
+        isFetchingLeaderboard = false;
+        setRefreshButtonLoading(false);
+        updateRefreshInfo();
       }
     }
 
     function updateTime() {
       document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      updateRefreshInfo();
     }
 
     // ==========================================
@@ -1898,9 +2101,9 @@
     // RENDER FUNCTIONS
     // ==========================================
     function impliedProb(oddsStr) {
-      const n = parseInt(oddsStr.replace('+', ''));
-      if (isNaN(n) || n <= 0) return '\u2014';
-      return (100 / (n + 100) * 100).toFixed(1) + '%';
+      const prob = americanOddsToImpliedProbability(oddsStr);
+      if (prob === null) return '\u2014';
+      return (prob * 100).toFixed(1) + '%';
     }
 
     function getLiveInfo(playerName) {
@@ -1921,7 +2124,7 @@
         data.forEach((d, i) => {
           const live = getLiveInfo(d.player);
           if (!live) return;
-          const livePos = parseInt(live.pos.replace('T', '')) || 999;
+          const livePos = parsePosition(live.pos);
           const oddsRank = i + 1;
           // Value = performing much better than odds rank
           if (livePos <= oddsRank - 5 && livePos <= 20) {
@@ -1994,7 +2197,7 @@
         const live = getLiveInfo(d.player);
         let liveHtml = '<div class="odds-live">--</div>';
         if (live) {
-          const posNum = parseInt(live.pos.replace('T', '')) || 999;
+          const posNum = parsePosition(live.pos);
           const cls = posNum === 1 ? 'leader' : posNum <= 5 ? 'top5' : posNum <= 10 ? 'top10' : '';
           liveHtml = `<div class="odds-live ${cls}">${live.pos} (${live.score})</div>`;
         }
@@ -2022,7 +2225,7 @@
     function getParlayLegStatus(player, prop) {
       const live = getLiveInfo(player);
       if (!live) return { text: '--', cls: '' };
-      const posNum = parseInt(live.pos.replace('T', '')) || 999;
+      const posNum = parsePosition(live.pos);
       const target = prop === 'Outright Win' ? 1 : parseInt(prop.replace(/\D/g, '')) || 999;
       let cls = 'miss';
       if (posNum <= target) cls = 'hitting';
@@ -2212,8 +2415,8 @@
               const liveA = getLiveInfo(builderLegs[i].player);
               const liveB = getLiveInfo(builderLegs[j].player);
               if (liveA && liveB) {
-                const posA = parseInt(liveA.pos.replace('T', '')) || 999;
-                const posB = parseInt(liveB.pos.replace('T', '')) || 999;
+                const posA = parsePosition(liveA.pos);
+                const posB = parsePosition(liveB.pos);
                 if (Math.abs(posA - posB) <= 5) {
                   correlations.push({
                     playerA: builderLegs[i].player.split(' ').pop(),
@@ -2259,7 +2462,17 @@
     // ==========================================
     // SAVED PARLAYS
     // ==========================================
-    let savedParlays = JSON.parse(localStorage.getItem('savedParlays') || '[]');
+    function loadSavedParlays() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem('savedParlays') || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        localStorage.removeItem('savedParlays');
+        return [];
+      }
+    }
+
+    let savedParlays = loadSavedParlays();
 
     function saveBuilderParlay() {
       if (builderLegs.length === 0) return;
@@ -2331,7 +2544,7 @@
           const hitting = p.legs.filter(l => {
             const live = getLiveInfo(l.player);
             if (!live) return false;
-            const posNum = parseInt(live.pos.replace('T', '')) || 999;
+            const posNum = parsePosition(live.pos);
             const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
             return posNum <= target;
           }).length;
@@ -2346,14 +2559,14 @@
           const hitting = p.legs.filter(l => {
             const live = getLiveInfo(l.player);
             if (!live) return false;
-            const posNum = parseInt(live.pos.replace('T', '')) || 999;
+            const posNum = parsePosition(live.pos);
             const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
             return posNum <= target;
           });
           const missing = p.legs.filter(l => {
             const live = getLiveInfo(l.player);
             if (!live) return true;
-            const posNum = parseInt(live.pos.replace('T', '')) || 999;
+            const posNum = parsePosition(live.pos);
             const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
             return posNum > target;
           });
@@ -2403,7 +2616,7 @@
       const missing = parlay.legs.filter(l => {
         const live = getLiveInfo(l.player);
         if (!live) return true;
-        const posNum = parseInt(live.pos.replace('T', '')) || 999;
+        const posNum = parsePosition(live.pos);
         const target = l.prop === 'Outright Win' ? 1 : parseInt(l.prop.replace(/\D/g, '')) || 999;
         return posNum > target;
       });
@@ -2417,7 +2630,7 @@
       let remainingProb = 1;
       missing.forEach(l => {
         const live = getLiveInfo(l.player);
-        const pos = live ? parseInt(live.pos.replace('T', '')) || 999 : 999;
+        const pos = live ? parsePosition(live.pos) : 999;
         let prob;
         if (l.prop === 'Outright Win') prob = positionToWinProb(pos);
         else if (l.prop === 'Top 5') prob = positionToTop5Prob(pos);
@@ -2651,15 +2864,8 @@
     // ==========================================
     // SEARCH / FILTER
     // ==========================================
-    function filterLeaderboard() {
-      const term = (document.getElementById('playerSearch')?.value || '').toLowerCase();
-      const rows = document.querySelectorAll('#leaderboard .player-row');
-      const cutLines = document.querySelectorAll('#leaderboard .cut-line-row');
-      cutLines.forEach(c => c.style.display = term ? 'none' : '');
-      rows.forEach(row => {
-        const name = row.querySelector('.player-name')?.textContent?.toLowerCase() || '';
-        row.style.display = name.includes(term) ? '' : 'none';
-      });
+    function applyLeaderboardFilters() {
+      renderLeaderboard(allPlayersData);
     }
 
     // ==========================================
@@ -2721,7 +2927,7 @@
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 
-    fetchLeaderboard();
+    fetchLeaderboard({ force: true });
     setInterval(fetchLeaderboard, REFRESH_INTERVAL);
     setInterval(updateTime, 1000);
     updateTime();
@@ -2729,9 +2935,12 @@
     // Refresh on tab focus (Page Visibility API)
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        fetchLeaderboard();
+        fetchLeaderboard({ force: true });
       }
     });
+
+    window.addEventListener('offline', updateRefreshInfo);
+    window.addEventListener('online', () => fetchLeaderboard({ force: true }));
   </script>
 </body>
 </html>
